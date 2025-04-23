@@ -1,0 +1,123 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+
+export default function Cadastro({navigation}) {
+    const [nome, setNome] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [confirmarSenha, setConfirmarSenha] = useState('');
+
+    const handleCadastro = () => {
+        if (senha !== confirmarSenha) {
+            alert('As senhas não coincidem');
+            return;
+        }
+
+        Alert.alert('Cadastro', `Nome: ${nome}\nEmail: ${email}`);
+        navigation.replace('Login');
+    }
+
+    return (
+        <View style={styles.container}>
+            <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <TextInput
+                style={styles.input}
+                placeholder="Nome"
+                value={nome}
+                onChangeText={setNome}
+                placeholderTextColor="#999"
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="Telefone"
+                keyboardType='phone-pad'
+                value={telefone}
+                onChangeText={setTelefone}
+                placeholderTextColor="#999"
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail}
+                placeholderTextColor="#999"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Senha"
+                secureTextEntry
+                value={senha}
+                onChangeText={setSenha}
+                placeholderTextColor="#999"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Confirmar Senha"
+                secureTextEntry
+                value={confirmarSenha}
+                onChangeText={setConfirmarSenha}
+                placeholderTextColor="#999"
+            />
+
+            <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
+                <Text style={styles.textoBotao}>Cadastrar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.replace('Login')}>
+                <Text style={styles.linkLogin}>Entrar</Text>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 30,
+        backgroundColor: '#fff'
+    },
+    text: {
+        fontSize: 24,
+    },
+    logo: {
+        width: 180,
+        height: 180,
+        marginBottom: 30,
+    },
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 25,
+        paddingHorizontal: 16,
+        marginBottom: 15,
+        fontSize: 16,
+        color: '#333',
+    },
+    botao: {
+        backgroundColor: '#2E86C1',
+        width: '100%',
+        height: 50,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+    },
+    textoBotao: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    linkLogin: {
+        marginTop: 20,
+        color: '#2E86C1',
+        fontSize: 16,
+        textDecorationLine: 'underline',
+    },
+});

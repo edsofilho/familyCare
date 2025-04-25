@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'                                         
+import { Ionicons } from '@expo/vector-icons';                                 
 
 import Login from './src/Login';
 import Cadastro from './src/Cadastro';
 import Home from './src/Home'
 import Informa from './src/Informa'
 import Alerta from './src/Alertas'
+import Medi from './src/Medi'
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ export default function App() {
         <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name='Alertas' component={Alerta}/>
         <Stack.Screen name='Informa' component={Informa}/>
+        <Stack.Screen name='Medi' component={Medi}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -12,9 +12,9 @@ export default function Home({ navigation }) {
   const handleAlertas = () => {
     navigation.replace('Alertas');
   };
-  // const handleMedicamentos = () => {
-  //   navigation.replace('Medicamentos');
-  // };
+  const handleMedi = () => {
+    navigation.replace('Medi');
+  };
   // const handleDoencas = () => {
   //   navigation.replace('Doencas');
   // };
@@ -38,6 +38,9 @@ export default function Home({ navigation }) {
           <View>
             <TouchableOpacity style={styles.Framelinks} onPress={handleInforma}>
               <Text>Informações</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.Framelinks} onPress={handleMedi}>
+              <Text>Medicamentos</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

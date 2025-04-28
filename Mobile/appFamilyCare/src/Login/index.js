@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function Login({ navigation }) {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
     const handleLogin = () => {
-        navigation.replace('Home');
+        if (email.toLowerCase() === 'idoso.com') {
+            navigation.replace('HomeIdoso');
+          } else {
+            navigation.replace('Home');
+          }
     };
 
     const handleCadastro = () => {

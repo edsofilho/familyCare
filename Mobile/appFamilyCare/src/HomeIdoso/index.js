@@ -1,15 +1,41 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
+
+
 export default function HomeIdoso() {
   const handlePress = () => {
     // Aqui futuramente você pode mandar um alerta!
-    console.log('SOS acionado!');
+    alert('SOS acionado!');
+  };
+//  const api = 'http://10.68.36.109/3mtec/addAlerta.php'
+   const enviarAlerta = () => {
+    fetch('http://127.0.0.1/Users/ds-mtec-3/Documents/TCC/familyCare/Mobile/appFamilyCare/apireact/addAlerta.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nome_idoso: 'João da Silva',
+        localizacao: 'Rua das Flores, 123' // pode ser vazio ou usar GPS depois
+      })
+    })
+    .then(response => response.json())
+    .then(json => {
+      if (json.status === 'sucesso') {
+        Alert.alert('Alerta enviado com sucesso!');
+      } else {
+        Alert.alert('Erro:', json.mensagem || 'Erro desconhecido.');
+      }
+    })
+    .catch(error => {
+      Alert.alert('Erro de conexão:', error.message);
+    });
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.sosButton} onPress={handlePress}>
+      <TouchableOpacity style={styles.sosButton} onPress={enviarAlerta}>
         <Text style={styles.sosText}>SOS</Text>
       </TouchableOpacity>
     </View>

@@ -1,31 +1,23 @@
 <?php 
+
 include_once('conexao.php');
 
-$query = $pdo->query("SELECT * FROM alertas ORDER BY data DESC");
+$postjson = json_decode(file_get_contents('php://input'), true);
 
+$id_usu = @$_GET['user'];
+
+$total_alertas = 0;
+
+$query = $pdo->query("SELECT * from alertas ");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
+$total_alertas = @count($res);
 
-$dados = [];
 
-for ($i = 0; $i < count($res); $i++) {
-    $dados[] = array(
-        'id' => $res[$i]['id'],
-        'nomeIdoso' => $res[$i]['nomeIdoso'],
-        'tipo' => $res[$i]['tipo']
-    );
-}
-
-if (count($res) > 0) {
-    $result = json_encode([
-        'status' => 'sucesso',
-        'alertas' => $dados
-    ]);
-} else {
-    $result = json_encode([
-        'status' => 'sucesso',
-        'alertas' => []
-    ]);
-}
+$result = json_encode(array('success'=>true, 
+    'total_alertas'=>$total_alertas
+        
+));
 
 echo $result;
+
 ?>

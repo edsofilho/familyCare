@@ -1,41 +1,24 @@
-<?php
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json; charset=utf-8');
+<?php 
+require_once("conexao.php");
+$tabela = 'alertas';
 
-// Conexão com o banco
-$banco = 'familycare';
-$host = 'localhost';
-$usuario = 'root';
-$senha = '';
+$postjson = json_decode(file_get_contents('php://input'), true);
 
-try {
-    $pdo = new PDO("mysql:dbname=$banco;host=$host", "$usuario", "$senha");
-} catch (Exception $e) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao conectar com o banco']);
-    exit();
-}
+$nomeIdoso = @$postjson['nomeIdoso'];
+$tipo = @$postjson['tipo'];
+$dataQueda = @$postjson['dataQueda'];
 
-// Pegando dados enviados do app
-$dados = json_decode(file_get_contents('php://input'), true);
+$res = $pdo->prepare("INSERT INTO $tabela SET nomeIdoso = :nomeIdoso, tipo = :tipo, dataQueda = :dataQueda");	
 
-$nome_idoso = $dados['nome_idoso'] ?? '';
-$tipo = 'SOS';
 
-// Validação simples
-if (empty($nome_idoso)) {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Nome do idoso é obrigatório']);
-    exit();
-}
+$res->bindValue(":nomeIdoso", "$nomeIdoso");
+$res->bindValue(":tipo", "$tipo");
+$res->bindValue(":dataQueda", "$dataQueda");
 
-// Inserir alerta
-$sql = "INSERT INTO alertas (nome_idoso, tipo) VALUES (:nome, :tipo)";
-$stmt = $pdo->prepare($sql);
-$stmt->bindParam(':nome', $nome_idoso);
-$stmt->bindParam(':tipo', $tipo);
+$res->execute();
 
-if ($stmt->execute()) {
-    echo json_encode(['status' => 'sucesso', 'mensagem' => 'Alerta registrado']);
-} else {
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao registrar alerta']);
-}
+$result = json_encode(array('mensagem'=>'Salvo com sucesso!', 'sucesso'=>true));
+
+echo $result;
+
 ?>

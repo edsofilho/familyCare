@@ -1,4 +1,3 @@
-
 <?php 
 
 header('Access-Control-Allow-Origin: *');
@@ -8,23 +7,20 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 header('Content-Type: application/json; charset=utf-8');  
 
 
-//dados do banco no servidor local
-$banco = 'familycare';
-$host = 'localhost';
+date_default_timezone_set('America/Sao_Paulo');
+
+
 $usuario = 'root';
 $senha = '';
-
-
+$host = 'localhost';
+$banco = 'familycare';
 
 try {
-
-	$pdo = new PDO("mysql:dbname=$banco;host=$host", "$usuario", "$senha");
-     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo 'Banco conctado';
-	
+	$pdo = new PDO("mysql:dbname=$banco; host=$host", "$usuario", "$senha");
+	echo 'banco conectado';
 } catch (Exception $e) {
-	 echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao conectar com o banco!', 'erro' => $e->getMessage()]);
-    exit;
+	echo 'Erro ao conectar com o banco!!' .$e;
 }
 
- ?>
+
+?>

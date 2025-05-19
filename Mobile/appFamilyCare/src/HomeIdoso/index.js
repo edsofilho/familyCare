@@ -10,7 +10,7 @@ export default function HomeIdoso() {
   };
 //  const api = 'http://10.68.36.109/3mtec/addAlerta.php'
    const enviarAlerta = () => {
-    fetch('http://127.0.0.1/Users/ds-mtec-3/Documents/TCC/familyCare/Mobile/appFamilyCare/apireact/addAlerta.php', {
+    fetch('http://127.0.0.1/http://10.68.36.109/3mtec/apireact/addAlerta.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

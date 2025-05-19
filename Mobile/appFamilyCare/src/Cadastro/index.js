@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+import axios from 'axios';
 
 export default function Cadastro({navigation}) {
     const [nome, setNome] = useState('');
@@ -8,15 +9,25 @@ export default function Cadastro({navigation}) {
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
 
-    const handleCadastro = () => {
+    const handleCadastro = async () => {
         if (senha !== confirmarSenha) {
-            alert('As senhas não coincidem');
-            return;
-        }
-
-        Alert.alert('Cadastro', `Nome: ${nome}\nEmail: ${email}`);
-        navigation.replace('Login');
+        alert('As senhas não coincidem')
+        return;
     }
+
+    try {
+        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
+         if (res.data.status === 'sucesso') {
+            navigation.replace('Login');
+         }
+         else{
+            alert('Erro', res.data.mensagem || 'Erro ao cadsatrar');
+         }
+        }
+         catch (error) {
+            alert('Erro de conexão', error.message);
+         }
+    };
 
     return (
         <View style={styles.container}>

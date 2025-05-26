@@ -42,6 +42,15 @@ export default function Login({ navigation }) {
     }
   };
 
+  const handleLoginTemp = () =>{
+    if(email == 'idoso'){
+    navigation.replace("HomeIdoso");
+    }
+    else if (email == "cuidador"){
+      navigation.replace("Home")
+    }
+  }
+
   const handleCadastro = () => {
     navigation.replace("Cadastro");
   };
@@ -66,7 +75,7 @@ export default function Login({ navigation }) {
         placeholderTextColor="#999"
       ></TextInput>
 
-      <TouchableOpacity style={styles.botao} onPress={handleLogin}>
+      <TouchableOpacity style={styles.botao} onPress={handleLoginTemp}>
         <Text style={styles.textoBotao}>Entrar</Text>
       </TouchableOpacity>
 

@@ -1,7 +1,4 @@
 <?php
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json; charset=utf-8');
-
 include_once('conexao.php');
 
 $postjson = json_decode(file_get_contents('php://input'), true);
@@ -10,11 +7,11 @@ $email = $postjson['email'];
 $senha = $postjson['senha'];
 
 // Verificar se está na tabela 'usuarios'
-$query1 = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email AND senha = :senha");
+$query1 = $pdo->query("SELECT * FROM usuarios WHERE email = :email AND senha = :senha");
 $query1->bindValue(':email', $email);
 $query1->bindValue(':senha', $senha);
 $query1->execute();
-$res1 = $query1->fetch(PDO::FETCH_ASSOC);
+$res1 = $query1->fetchAll(PDO::FETCH_ASSOC);
 
 // Verificar se está na tabela 'idosos'
 $query2 = $pdo->prepare("SELECT * FROM idosos WHERE email = :email AND senha = :senha");

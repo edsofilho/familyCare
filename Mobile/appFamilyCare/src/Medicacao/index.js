@@ -7,15 +7,30 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  CheckBox,
+
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Checkbox from "expo-checkbox";
 
 export default function Medi({ navigation }) {
   const [remedios, setRemedios] = useState([
     { id: "1", nome: "Paracetamol", horario: "08:00", tomado: false },
     { id: "2", nome: "Losartana", horario: "12:00", tomado: false },
   ]);
+
+  const onChangeHora = (event, selectedDate) => {
+    setMostrarRelogio(false);
+    if (selectedDate) {
+      setHoraSelecionada(selectedDate);
+      const hora = selectedDate.getHours().toString().padStart(2, "0");
+      const minuto = selectedDate.getMinutes().toString().padStart(2, "0");
+      setNovoHorario(`${hora}:${minuto}`);
+    }
+  };
+
+  const [mostrarRelogio, setMostrarRelogio] = useState(false);
+  const [horaSelecionada, setHoraSelecionada] = useState(new Date());
 
   const handleVoltar = () => {
     navigation.replace("Home");
@@ -53,7 +68,7 @@ export default function Medi({ navigation }) {
         <Text style={styles.nomeRemedio}>{item.nome}</Text>
         <Text style={styles.horario}>Horário: {item.horario}</Text>
       </View>
-      <CheckBox
+      <Checkbox
         value={item.tomado}
         onValueChange={() => toggleTomado(item.id)}
         tintColors={{ true: "#2E86C1", false: "#aaa" }}
@@ -95,12 +110,25 @@ export default function Medi({ navigation }) {
               value={novoNome}
               onChangeText={setNovoNome}
             />
-            <TextInput
+            <TouchableOpacity
+              onPress={() => setMostrarRelogio(true)}
               style={styles.input}
-              placeholder="Horário (ex: 14:00)"
-              value={novoHorario}
-              onChangeText={setNovoHorario}
-            />
+            >
+              <Text
+                style={{ fontSize: 16, color: novoHorario ? "#000" : "#888" }}
+              >
+                {novoHorario || "Selecione o horário"}
+              </Text>
+            </TouchableOpacity>
+            {mostrarRelogio && (
+              <DateTimePicker
+                value={horaSelecionada}
+                mode="time"
+                is24Hour={true}
+                display="default"
+                onChange={onChangeHora}
+              />
+            )}
             <TouchableOpacity
               style={styles.modalButton}
               onPress={adicionarRemedio}
@@ -204,20 +232,20 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   botaoVoltar: {
-    backgroundColor: '#2E86C1',
+    backgroundColor: "#2E86C1",
     padding: 10,
     borderRadius: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
-  
+
   textoBotao: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
     marginLeft: 5,
   },

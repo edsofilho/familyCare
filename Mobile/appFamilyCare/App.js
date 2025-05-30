@@ -10,6 +10,7 @@ import Informa from './src/Informa'
 import Alerta from './src/Alertas'
 import Medi from './src/Medicacao'
 import HomeIdoso from './src/HomeIdoso'
+import Doencas from './src/Doencas';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,7 @@ export default function App() {
         <Stack.Screen name='Informa' component={Informa}/>
         <Stack.Screen name='Medi' component={Medi}/>
         <Stack.Screen name='HomeIdoso' component={HomeIdoso}></Stack.Screen>
+        <Stack.Screen name='Doencas' component={Doencas}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

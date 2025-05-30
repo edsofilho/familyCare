@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
-export default function HomeIdoso() {
+export default function HomeIdoso({ navigation }) {
   const [alertaAtivo, setAlertaAtivo] = useState(false);
   const [corDeFundo, setCorDeFundo] = useState("#fff");
+  const [contador, setContador] = useState(5);
   const [intervalId, setIntervalId] = useState(null);
   const [timeoutId, setTimeoutId] = useState(null);
+  const [contadorIntervalId, setContadorIntervalId] = useState(null);
 
   const iniciarAlerta = () => {
     setAlertaAtivo(true);
@@ -17,6 +19,11 @@ export default function HomeIdoso() {
     }, 500);
     setIntervalId(intervalo);
 
+    const contagem = setInterval(() => {
+      setContador((prev) => prev - 1);
+    }, 1000);
+    setContadorIntervalId(contagem);
+
     // Após 5 segundos, envia o alerta automaticamente
     const timeout = setTimeout(() => {
       pararAlerta(); // para o piscar
@@ -25,11 +32,17 @@ export default function HomeIdoso() {
     setTimeoutId(timeout);
   };
 
+  const handleLogout = () => {
+    navigation.replace("Login");
+  };
+
   const pararAlerta = () => {
     setAlertaAtivo(false);
     setCorDeFundo("#fff");
+    setContador(5);
     if (intervalId) clearInterval(intervalId);
     if (timeoutId) clearTimeout(timeoutId);
+    if (contadorIntervalId) clearInterval(contadorIntervalId);
   };
 
   const enviarAlerta = () => {
@@ -56,6 +69,8 @@ export default function HomeIdoso() {
       });
   };
 
+  const corTextoDinamico = corDeFundo === "#ec1c24" ? "#fff" : "#ec1c24";
+
   return (
     <View style={[styles.container, { backgroundColor: corDeFundo }]}>
       {!alertaAtivo ? (
@@ -64,12 +79,20 @@ export default function HomeIdoso() {
         </TouchableOpacity>
       ) : (
         <>
-          <Text style={styles.contagem}>Enviando alerta em 5 segundos...</Text>
+          <Text style={[styles.contagem, { color: corTextoDinamico }]}>
+            Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...
+          </Text>
           <TouchableOpacity style={styles.cancelarButton} onPress={pararAlerta}>
             <Text style={styles.cancelarText}>Cancelar Alerta</Text>
           </TouchableOpacity>
         </>
       )}
+      {/* <TouchableOpacity
+        style={styles.logoutButton}
+        onPress={handleLogout}
+      >
+        <Text style={styles.logoutText}>Sair</Text>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -102,7 +125,6 @@ const styles = StyleSheet.create({
   contagem: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#EC1C24",
   },
   cancelarButton: {
     backgroundColor: "#555",
@@ -114,5 +136,23 @@ const styles = StyleSheet.create({
   cancelarText: {
     color: "#fff",
     fontSize: 20,
+  },
+  llogoutButton: {
+    backgroundColor: "#c0392b",
+    paddingVertical: 12,
+    paddingHorizontal: 35,
+    borderRadius: 30,
+    marginTop: 50,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  logoutText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+    letterSpacing: 1,
   },
 });

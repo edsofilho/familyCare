@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -53,12 +52,34 @@ export default function Medi({ navigation }) {
         id: Date.now().toString(),
         nome: novoNome,
         horario: novoHorario,
-        tomado: false,
       };
-      setRemedios([...remedios, novo]);
-      setNovoNome("");
-      setNovoHorario("");
-      setModalVisible(false);
+      fetch("http://10.68.36.109/3mtec/apireact/addRemedio.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(novo),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.status === "sucesso") {
+            const novoComId = {
+              id: Date.now().toString(),
+              ...novo,
+              tomado: false,
+            };
+            setRemedios([...remedios, novoComId]);
+            setNovoNome("");
+            setNovoHorario("");
+            setModalVisible(false);
+          }
+          else {
+            alert(json.mensagem || "Erro ao salvar remédio");
+          }
+        })
+        .catch((error) => {
+          alert("Erro de conexão: " + error.message);
+        });
     }
   };
 

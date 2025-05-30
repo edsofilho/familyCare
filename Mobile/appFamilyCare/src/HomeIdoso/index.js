@@ -17,8 +17,13 @@ export default function HomeIdoso() {
     }, 500);
     setIntervalId(intervalo);
 
+    const contadorInterval = setInterval(() => {
+      setContador((prev) => prev - 1);
+    }, 1000);
+
     // Após 5 segundos, envia o alerta automaticamente
     const timeout = setTimeout(() => {
+      clearInterval(contadorInterval);
       pararAlerta(); // para o piscar
       enviarAlerta(); // envia o alerta
     }, 5000);
@@ -28,6 +33,7 @@ export default function HomeIdoso() {
   const pararAlerta = () => {
     setAlertaAtivo(false);
     setCorDeFundo("#fff");
+    setContador(5);
     if (intervalId) clearInterval(intervalId);
     if (timeoutId) clearTimeout(timeoutId);
   };
@@ -56,6 +62,8 @@ export default function HomeIdoso() {
       });
   };
 
+  const corDoTexto = corDeFundo === "#fff" ? "#EC1C24" : "#fff";
+
   return (
     <View style={[styles.container, { backgroundColor: corDeFundo }]}>
       {!alertaAtivo ? (
@@ -64,7 +72,7 @@ export default function HomeIdoso() {
         </TouchableOpacity>
       ) : (
         <>
-          <Text style={styles.contagem}>Enviando alerta em 5 segundos...</Text>
+          <Text style={[styles.contagem, { color: corDoTexto }]}>Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...</Text>
           <TouchableOpacity style={styles.cancelarButton} onPress={pararAlerta}>
             <Text style={styles.cancelarText}>Cancelar Alerta</Text>
           </TouchableOpacity>

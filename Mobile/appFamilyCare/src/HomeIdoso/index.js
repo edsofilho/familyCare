@@ -19,13 +19,20 @@ export default function HomeIdoso({ navigation }) {
     }, 500);
     setIntervalId(intervalo);
 
+<<<<<<< HEAD
     const contagem = setInterval(() => {
       setContador((prev) => prev - 1);
     }, 1000);
     setContadorIntervalId(contagem);
+=======
+    const contadorInterval = setInterval(() => {
+      setContador((prev) => prev - 1);
+    }, 1000);
+>>>>>>> c2ed29dc846bcbf3477bc5bfd7ddf2cf29ad75ba
 
     // Após 5 segundos, envia o alerta automaticamente
     const timeout = setTimeout(() => {
+      clearInterval(contadorInterval);
       pararAlerta(); // para o piscar
       enviarAlerta(); // envia o alerta
     }, 5000);
@@ -69,7 +76,11 @@ export default function HomeIdoso({ navigation }) {
       });
   };
 
+<<<<<<< HEAD
   const corTextoDinamico = corDeFundo === "#ec1c24" ? "#fff" : "#ec1c24";
+=======
+  const corDoTexto = corDeFundo === "#fff" ? "#EC1C24" : "#fff";
+>>>>>>> c2ed29dc846bcbf3477bc5bfd7ddf2cf29ad75ba
 
   return (
     <View style={[styles.container, { backgroundColor: corDeFundo }]}>
@@ -79,9 +90,13 @@ export default function HomeIdoso({ navigation }) {
         </TouchableOpacity>
       ) : (
         <>
+<<<<<<< HEAD
           <Text style={[styles.contagem, { color: corTextoDinamico }]}>
             Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...
           </Text>
+=======
+          <Text style={[styles.contagem, { color: corDoTexto }]}>Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...</Text>
+>>>>>>> c2ed29dc846bcbf3477bc5bfd7ddf2cf29ad75ba
           <TouchableOpacity style={styles.cancelarButton} onPress={pararAlerta}>
             <Text style={styles.cancelarText}>Cancelar Alerta</Text>
           </TouchableOpacity>

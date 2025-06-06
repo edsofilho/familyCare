@@ -13,7 +13,7 @@ export default function Informa({ navigation }) {
 
       <View style={styles.infoBox}>
         <Text style={styles.label}>Nome:</Text>
-        <Text style={styles.valor}>Getúlio Pereira</Text>
+        <Text style={styles.valor}>Cláudio</Text>
 
         <Text style={styles.label}>Idade:</Text>
         <Text style={styles.valor}>82 anos</Text>

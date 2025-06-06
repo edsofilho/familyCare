@@ -1,23 +1,65 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState, useEffect } from "react"; // Adicionando os imports necessários
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Button,
+  TouchableOpacity
+} from "react-native";
+import axios from "axios";
 
 export default function Alerta({ navigation }) {
-    const handleHome = () => {
-        navigation.replace('Home');
-      };
+  const [alertas, setAlertas] = useState([]); // Definindo o estado para os alertas
+
+  useEffect(() => {
+    listarAlertas();
+  }, []); // Carrega os alertas quando o componente for montado
+
+  async function listarAlertas() {
+    try {
+      const res = await axios.get(
+        "http://10.68.36.109/3mtec/apireact/listarAlertas.php"
+      );
+      if (res.data.success === "sucesso") {
+        setAlertas(res.data.alertas); // Atualiza o estado com os alertas retornados
+      } else {
+        Alert.alert("Nenhum alerta encontrado");
+      }
+    } catch (error) {
+      console.error("Erro ao listar alertas:", error);
+      Alert.alert("Erro de conexão:", error.message);
+    }
+  }
+  const handleHome = () => {
+    navigation.replace("Home");
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Alertas de Queda</Text>
-
-      <View style={styles.alertaBox}>
-        <Ionicons name="alert-circle-outline" size={64} color="#ccc" />
-        <Text style={styles.alertaTexto}>Nenhum alerta de queda registrado até o momento.</Text>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.botaoVoltar} onPress={handleVoltar}>
+          <Ionicons name="arrow-back" size={20} color="#fff" />
+          <Text style={styles.textoBotao}>Voltar</Text>
+        </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.voltar} onPress={handleHome}>
-        <Text style={styles.voltarTexto}>Voltar</Text>
-      </TouchableOpacity>
+      <ScrollView>
+        {alertas.length > 0 ? (
+          alertas.map((alerta) => (
+            <View key={alerta.id} style={styles.alerta}>
+              <Text style={styles.alertaText}>Idoso: {alerta.nomeIdoso}</Text>
+              <Text style={styles.alertaText}>Tipo: {alerta.tipo}</Text>
+              <Text style={styles.alertaText}>Data: {alerta.data}</Text>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.semAlertas}>Nenhum alerta encontrado.</Text>
+        )}
+      </ScrollView>
+      <Button title="Atualizar" onPress={listarAlertas}></Button>
+      <Button title="Voltar" onPress={handleHome}></Button>
     </View>
   );
 }
@@ -26,37 +68,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  titulo: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  alertaBox: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  alerta: {
     padding: 20,
+    marginBottom: 15,
+    backgroundColor: "#f1f1f1",
     borderRadius: 10,
-    backgroundColor: '#f1f1f1',
-    marginBottom: 40,
+    width: "100%",
   },
-  alertaTexto: {
+  alertaText: {
     fontSize: 16,
-    color: '#777',
-    textAlign: 'center',
-    marginTop: 10,
+    color: "#777",
+    textAlign: "center",
+    marginTop: 5,
   },
-  voltar: {
-    backgroundColor: '#2E86C1',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+  semAlertas: {
+    fontSize: 18,
+    color: "#888",
+    textAlign: "center",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  botaoVoltar: {
+    top: 40,
+    left: 20,
+    backgroundColor: "#2E86C1",
+    padding: 10,
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
-  voltarTexto: {
-    color: '#fff',
+  textoBotao: {
+    color: "#fff",
     fontSize: 16,
+    marginLeft: 5,
   },
 });

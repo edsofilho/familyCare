@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FamilyCare</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+
+  <body>
+    <!-- nav -->
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo-img" alt="Logo FamilyCare">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#tela1">Tela 1</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#tela2">Tela 2</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="#feedbacks">Feedbacks</a>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    
+      <!-- fim da nav -->
+       
+
+    <div class="container my-5">
+      <div class="text-center mb-5">
+        <h1>Aplicativo de Ajuda no Cuidado de Idosos</h1>
+        <p class="lead">
+          Mais do que tecnologia: é um compromisso com o bem-estar e a dignidade de quem cuidou de nós a vida toda.
+        </p>
+      </div>
+
+      <div class="row g-3">
+
+        <div class="col-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary-emphasis">O que é?</h5>
+              <p class="card-text">FamilyCare é um aplicativo desenvolvido para oferecer mais segurança e tranquilidade a idosos e seus familiares. Seu principal objetivo é notificar cuidadores imediatamente em casos de emergência, como quedas, que representam um risco significativo à saúde na terceira idade.
+              O app funciona em conjunto com um colete equipado com sensores de queda, que detectam movimentos bruscos. Ao identificar uma possível queda, o sistema envia alertas em tempo real para os cuidadores cadastrados, possibilitando uma resposta rápida e eficaz.
+            Além do sensor de quedas, o aplicativo voltado para o idoso conta com um botão de SOS, que pode ser acionado manualmente em qualquer situação de urgência, oferecendo mais autonomia e segurança.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary-emphasis">Por que o FamilyCare é essencial?</h5>
+              <p class="card-text">As quedas estão entre as principais causas de acidentes com idosos, podendo levar a complicações sérias como fraturas, perda de mobilidade e hospitalizações prolongadas. Dados do Ministério da Saúde apontam que cerca de 30% dos idosos caem ao menos uma vez por ano, e muitos desses casos ocorrem dentro de casa. A ação rápida após uma queda pode fazer a diferença entre uma recuperação tranquila ou complicações mais graves.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary-emphasis">Funcionalidades:</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Sensor inteligente de queda embutido no colete</li>
+                <li class="list-group-item">Notificações de medicamentos</li>
+                <li class="list-group-item">Envio automático de alertas para o celular dos cuidadores</li>
+                <li class="list-group-item">Funcionalidades exclusivas para cuidadores: agenda, notificações e comunicação</li>
+                <li class="list-group-item">Interface simples, prática e intuitiva</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      <div class="col-12 mt-4">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title text-primary-emphasis">Nossos objetivos</h5>
+            <p class="card-text">
+              Family Care é um aplicativo desenvolvido com o objetivo de auxiliar no cuidado de idosos,
+               promovendo segurança, bem-estar e acompanhamento contínuo por parte de familiares e cuidadores. 
+               O app permite o monitoramento de rotinas diárias, medicações, consultas médicas e sinais vitais,
+               além de enviar alertas em caso de emergências. Com uma interface simples e acessível, 
+               o Family Care busca fortalecer o vínculo entre idosos, cuidadores e familiares, 
+               oferecendo suporte prático para uma vida mais saudável e independente na terceira idade.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 mt-4" id="tela1">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title text-primary-emphasis">tela print</h5>
+            <!-- espaço para prints-->
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-4" id="tela2">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5 class="card-title text-primary-emphasis">tela print</h5>
+            <!-- espaço para prints-->
+            </p>
+          </div>
+        </div>
+      </div>
+        
+      <div class="mt-5">
+      <h2>Envie seu Feedback</h2><br>
+      <details>
+        <summary>Deixe seu feedback</summary>
+        <div class="col-md-6 mt-3" id="feedbacks">
+          <form method="POST">
+            <input type="text" name="nome" placeholder="Seu nome" class="form-control mb-2" required>
+            <input type="email" name="email" placeholder="Seu e-mail" class="form-control mb-2" required>
+            <input type="text" name="assunto" placeholder="Assunto" class="form-control mb-2">
+            <textarea name="mensagem" rows="4" placeholder="Escreva aqui seu feedback..." class="form-control mb-3" required></textarea>
+            <input type="submit" value="Enviar" class="btn btn-success">
+            <input type="reset" value="Limpar" class="btn btn-danger ms-2">
+          </form>
+        </div>
+      </details>
+
+      <hr>
+
+      <!-- Lista de Feedbacks -->
+      <h4>Feedbacks Recebidos</h4>
+      <table class="table table-bordered table-hover" id="feedback">
+        <thead class="table-dark">
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Assunto</th>
+            <th>Mensagem</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in feedbacks %}
+          <tr>
+            <td>{{ f.nome }}</td>
+            <td>{{ f.email }}</td>
+            <td>{{ f.assunto }}</td>
+            <td>{{ f.mensagem }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    </div>
+    
+    <footer class="rodape">
+      <p> © Direitos reservados, feito por
+        <div class="d-flex gap-2 justify-content-center flex-wrap">
+          <a href="https://github.com/edsofilho" class="btn btn-dark">Edson</a>
+          <a href="https://github.com/OThurzn" class="btn btn-dark">Arthur</a>
+          <a href="https://github.com/anardes" class="btn btn-dark">Ana Nardes</a>
+        </div>
+      </p>
+
+    </footer>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

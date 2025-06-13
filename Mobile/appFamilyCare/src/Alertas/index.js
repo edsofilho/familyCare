@@ -22,7 +22,7 @@ export default function Alerta({ navigation }) {
       const res = await axios.get(
         "http://10.68.36.109/3mtec/apireact/listarAlertas.php"
       );
-      if (res.data.success === "sucesso") {
+      if (res.data.success === true) {
         setAlertas(res.data.alertas); // Atualiza o estado com os alertas retornados
       } else {
         Alert.alert("Nenhum alerta encontrado");
@@ -39,8 +39,8 @@ export default function Alerta({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.botaoVoltar} onPress={handleVoltar}>
-          <Ionicons name="arrow-back" size={20} color="#fff" />
+        <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
+          {/* <Ionicons name="arrow-back" size={20} color="#fff" /> */}
           <Text style={styles.textoBotao}>Voltar</Text>
         </TouchableOpacity>
       </View>

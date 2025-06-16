@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 export default function HomeIdoso({ navigation }) {
@@ -9,11 +9,18 @@ export default function HomeIdoso({ navigation }) {
   const [timeoutId, setTimeoutId] = useState(null);
   const [contadorIntervalId, setContadorIntervalId] = useState(null);
 
+  useEffect(() => {
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+      if (contadorIntervalId) clearInterval(contadorIntervalId);
+    };
+  }, [intervalId, timeoutId, contadorIntervalId]);
+
   const iniciarAlerta = () => {
     setAlertaAtivo(true);
     setContador(5);
 
-    // Começa a piscar a tela
     const intervalo = setInterval(() => {
       setCorDeFundo((prev) => (prev === "#fff" ? "#ec1c24" : "#fff"));
     }, 500);
@@ -24,17 +31,12 @@ export default function HomeIdoso({ navigation }) {
     }, 1000);
     setContadorIntervalId(contagem);
 
-    // Após 5 segundos, envia o alerta automaticamente
     const timeout = setTimeout(() => {
       clearInterval(contagem);
-      pararAlerta(); // para o piscar
-      enviarAlerta(); // envia o alerta
+      pararAlerta();
+      enviarAlerta();
     }, 5000);
     setTimeoutId(timeout);
-  };
-
-  const handleLogout = () => {
-    navigation.replace("Login");
   };
 
   const pararAlerta = () => {
@@ -44,6 +46,9 @@ export default function HomeIdoso({ navigation }) {
     if (intervalId) clearInterval(intervalId);
     if (timeoutId) clearTimeout(timeoutId);
     if (contadorIntervalId) clearInterval(contadorIntervalId);
+    setIntervalId(null);
+    setTimeoutId(null);
+    setContadorIntervalId(null);
   };
 
   const enviarAlerta = () => {
@@ -53,20 +58,21 @@ export default function HomeIdoso({ navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nome_idoso: "João da Silva",
-        localizacao: "Rua das Flores, 123",
+        nomeIdoso: "João da Silva",
+        tipo: "Queda",
+        dataQueda: new Date().toISOString()
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.status === "sucesso") {
-          Alert.alert("Sucesso", "Alerta enviado com sucesso!");
+        if (json.sucesso === true) {
+          navigation.replace("AlertaEnviado");
         } else {
-          Alert.alert("Erro", json.mensagem || "Erro desconhecido.");
+          Alert.alert("Erro", json.mensagem || "Erro ao salvar alerta");
         }
       })
       .catch((error) => {
-        Alert.alert("Erro de conexão", error.message);
+        Alert.alert("Erro", "Erro ao conectar com o servidor. Verifique sua conexão.");
       });
   };
 
@@ -88,12 +94,6 @@ export default function HomeIdoso({ navigation }) {
           </TouchableOpacity>
         </>
       )}
-      {/* <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        <Text style={styles.logoutText}>Sair</Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
@@ -137,23 +137,5 @@ const styles = StyleSheet.create({
   cancelarText: {
     color: "#fff",
     fontSize: 20,
-  },
-  logoutButton: {
-    backgroundColor: "#c0392b",
-    paddingVertical: 12,
-    paddingHorizontal: 35,
-    borderRadius: 30,
-    marginTop: 50,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-  },
-  logoutText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    letterSpacing: 1,
   },
 });

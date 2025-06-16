@@ -1,11 +1,12 @@
 <?php 
-include_once('conexao.php');
+header('Content-Type: application/json');
 
-$query = $pdo->query("SELECT * FROM alertas");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
+// Carrega os dados do arquivo JSON
+$dados = json_decode(file_get_contents('dados.json'), true);
 
+// Retorna os alertas
 echo json_encode([
-    'success' => 'sucesso',
-    'alertas' => $res
+    'success' => true,
+    'alertas' => $dados['alertas']
 ], JSON_UNESCAPED_UNICODE);
 ?>

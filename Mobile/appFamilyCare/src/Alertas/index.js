@@ -22,14 +22,14 @@ export default function Alerta({ navigation }) {
       const res = await axios.get(
         "http://10.68.36.109/3mtec/apireact/listarAlertas.php"
       );
-      if (res.data.success === true) {
-        setAlertas(res.data.alertas); // Atualiza o estado com os alertas retornados
+      if (res.data && res.data.alertas) {
+        setAlertas(res.data.alertas);
       } else {
-        Alert.alert("Nenhum alerta encontrado");
+        Alert.alert("Erro", "Não foi possível carregar os alertas");
       }
     } catch (error) {
       console.error("Erro ao listar alertas:", error);
-      Alert.alert("Erro de conexão:", error.message);
+      Alert.alert("Erro", "Erro ao conectar com o servidor. Verifique sua conexão.");
     }
   }
   const handleHome = () => {
@@ -39,10 +39,10 @@ export default function Alerta({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
-          {/* <Ionicons name="arrow-back" size={20} color="#fff" /> */}
+        {/* <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
+          <Ionicons name="arrow-back" size={20} color="#fff" />
           <Text style={styles.textoBotao}>Voltar</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <ScrollView>
@@ -51,7 +51,7 @@ export default function Alerta({ navigation }) {
             <View key={alerta.id} style={styles.alerta}>
               <Text style={styles.alertaText}>Idoso: {alerta.nomeIdoso}</Text>
               <Text style={styles.alertaText}>Tipo: {alerta.tipo}</Text>
-              <Text style={styles.alertaText}>Data: {alerta.data}</Text>
+              <Text style={styles.alertaText}>Data: {alerta.dataQueda}</Text>
             </View>
           ))
         ) : (

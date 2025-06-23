@@ -52,28 +52,67 @@ export default function HomeIdoso({ navigation }) {
   };
 
   const enviarAlerta = () => {
+    try {
+      const dataAtual = new Date();
+      // Formata a data para o formato dd/mm/yyyy HH:mm:ss
+      const dataFormatada = dataAtual.toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
     fetch("http://10.68.36.109/3mtec/apireact/addAlerta.php", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
         nomeIdoso: "João da Silva",
         tipo: "Queda",
-        dataQueda: new Date().toISOString()
+        dataQueda: dataFormatada,
+        localizacao: "Local não especificado",
+        descricao: "Alerta de SOS ativado pelo idoso"
       }),
+      timeout: 10000 // 10 segundos de timeout
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erro HTTP ${response.status}`);
+        }
+        return response.json();
+      })
       .then((json) => {
-        if (json.sucesso === true) {
+        if (json.sucesso) {
           navigation.replace("AlertaEnviado");
         } else {
-          Alert.alert("Erro", json.mensagem || "Erro ao salvar alerta");
+          Alert.alert(
+            "Erro",
+            `Erro ao salvar o alerta:\n${json.mensagem || "Erro desconhecido"}`
+          );
         }
       })
       .catch((error) => {
-        Alert.alert("Erro", "Erro ao conectar com o servidor. Verifique sua conexão.");
+        console.error('Erro:', error);
+        Alert.alert(
+          "Erro",
+          "Erro ao salvar o alerta. Por favor, verifique:\n" +
+          "- Sua conexão com a internet\n" +
+          "- Se o servidor está rodando\n" +
+          "- Se o banco de dados está acessível\n" +
+          "Detalhes: " + error.message
+        );
       });
+    } catch (error) {
+      console.error('Erro interno:', error);
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde."
+      );
+    }
   };
 
   const corTextoDinamico = corDeFundo === "#ec1c24" ? "#fff" : "#ec1c24";

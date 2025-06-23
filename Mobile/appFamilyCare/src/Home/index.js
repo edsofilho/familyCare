@@ -18,6 +18,9 @@ export default function Home({ navigation }) {
   const handleDoencas = () => {
     navigation.replace("Doencas");
   };
+  const handleCadastrarIdoso = () => {
+    navigation.replace('CadastrarIdoso');
+  };
   
   // const handleTratamentos = () => {
   //   navigation.replace('Tratamentos');
@@ -40,6 +43,32 @@ export default function Home({ navigation }) {
               style={{ marginLeft: 8 }}
             />
           </View>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.cadastrarButton} onPress={handleCadastrarIdoso}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons
+              name="person-add-outline"
+              size={28}
+              color="#4CAF50"
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.cadastrarText}>Cadastrar Idoso</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View>
+          <TouchableOpacity style={styles.Framelinks} onPress={handleInforma}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.alertaText}>Cláudio</Text>
+              <Ionicons
+                name="warning-outline"
+                size={28}
+                color="#ff0000"
+                style={{ marginLeft: 8 }}
+              />
+            </View>
+          </TouchableOpacity>
 
           <View>
             <TouchableOpacity style={styles.Framelinks} onPress={handleInforma}>
@@ -48,11 +77,11 @@ export default function Home({ navigation }) {
             <TouchableOpacity style={styles.Framelinks} onPress={handleMedi}>
               <Text>Medicamentos</Text>
             </TouchableOpacity>
-             <TouchableOpacity style={styles.Framelinks} onPress={handleDoencas}>
+            <TouchableOpacity style={styles.Framelinks} onPress={handleDoencas}>
               <Text>Doenças</Text>
             </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.parteCuidadores}>
@@ -87,32 +116,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  NomeCuidador: {
-    fontSize: 24,
-    fontWeight: "bold",
+  cadastrarButton: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#4CAF50",
+    width: 200,
+    alignItems: "center",
     marginBottom: 10,
   },
-  parteIdoso: {
-    width: "90%",
-    padding: 20,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 10,
-    marginBottom: 20,
+  cadastrarText: {
+    color: "#4CAF50",
+    fontSize: 18,
+    fontWeight: "bold",
   },
-  Framelinks: {
-    backgroundColor: "#2E86C1",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginVertical: 5,
-    alignItems: "center",
-  },
-  parteCuidadores: {
-    width: "90%",
-    backgroundColor: "#dff0f7",
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
+  tituloCuidadores: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   textoCuidadores: {
     fontSize: 16,
@@ -120,17 +142,48 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   alertaLink: {
-    marginVertical: 1,
-    // alignItems: 'center',
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#ff0000",
+    width: 200,
+    alignItems: "center",
+    marginBottom: 10,
   },
   alertaText: {
     color: "#ff0000",
-    fontSize: 30,
+    fontSize: 18,
     fontWeight: "bold",
   },
-  tituloCuidadores: {
+  Framelinks: {
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#4CAF50",
+    width: 200,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  linkText: {
+    color: "#4CAF50",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  NomeCuidador: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  parteIdoso: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  parteCuidadores: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

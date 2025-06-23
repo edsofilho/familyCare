@@ -1,31 +1,28 @@
 <?php 
-header('Content-Type: application/json');
+require_once("conexao.php");
+// TROQUE O NOME DA SUA TABELA
+$tabela = 'alertas';
 
-// Simula o recebimento de dados
 $postjson = json_decode(file_get_contents('php://input'), true);
 
-// Carrega os dados existentes
-$dados = json_decode(file_get_contents('dados.json'), true);
 
-// Gera um novo ID
-$ultimoId = end($dados['alertas'])['id'] ?? 0;
-$novoId = $ultimoId + 1;
+//COLOQUE O NOME DOS SEUS ATRIBUTOS
+$nome = "Claudio";
+$tipo = "queda";
+$dataQueda = @$postjson['dataQueda'];
 
-// Adiciona o novo alerta
-$dados['alertas'][] = [
-    'id' => $novoId,
-    'nomeIdoso' => $postjson['nomeIdoso'] ?? 'João da Silva',
-    'tipo' => $postjson['tipo'] ?? 'Queda',
-    'dataQueda' => $postjson['dataQueda'] ?? date('Y-m-d H:i:s'),
-    'localizacao' => $postjson['localizacao'] ?? 'Sala de estar'
-];
+//TROQUE O NOME DOS ATRIBUTOS DA SUA TABELA DO BD
+$res = $pdo->prepare("INSERT INTO $tabela SET nome_idoso = :nome_idoso, tipo = :tipo, data_queda = :data_queda");	
 
-// Salva os dados atualizados
-file_put_contents('dados.json', json_encode($dados, JSON_UNESCAPED_UNICODE));
 
-// Retorna mensagem de sucesso
-echo json_encode([
-    'sucesso' => true,
-    'mensagem' => 'Alerta salvo com sucesso!'
-], JSON_UNESCAPED_UNICODE);
+$res->bindValue(":nome_idoso", "$nome");
+$res->bindValue(":tipo", "$tipo");
+$res->bindValue(":data_queda", "$dataQueda");
+
+$res->execute();
+
+$result = json_encode(array('mensagem'=>'Salvo com sucesso!', 'sucesso'=>true));
+
+echo $result;
+
 ?>

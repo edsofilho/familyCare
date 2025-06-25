@@ -77,9 +77,6 @@ export default function Home({ navigation }) {
             <TouchableOpacity style={styles.Framelinks} onPress={handleMedi}>
               <Text>Medicamentos</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.Framelinks} onPress={handleDoencas}>
-              <Text>Doenças</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function HomeIdoso({ navigation }) {
   const [alertaAtivo, setAlertaAtivo] = useState(false);
@@ -17,9 +18,15 @@ export default function HomeIdoso({ navigation }) {
     };
   }, [intervalId, timeoutId, contadorIntervalId]);
 
+  const handleConectarColeteCare = () => {
+    navigation.replace("ConectarColeteCare");
+  };
+
   const iniciarAlerta = () => {
     setAlertaAtivo(true);
     setContador(5);
+
+
 
     const intervalo = setInterval(() => {
       setCorDeFundo((prev) => (prev === "#fff" ? "#ec1c24" : "#fff"));
@@ -64,48 +71,48 @@ export default function HomeIdoso({ navigation }) {
         second: '2-digit'
       });
 
-    fetch("http://10.68.36.109/3mtec/apireact/addAlerta.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        nomeIdoso: "João da Silva",
-        tipo: "Queda",
-        dataQueda: dataFormatada,
-        localizacao: "Local não especificado",
-        descricao: "Alerta de SOS ativado pelo idoso"
-      }),
-      timeout: 10000 // 10 segundos de timeout
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Erro HTTP ${response.status}`);
-        }
-        return response.json();
+      fetch("http://10.68.36.109/3mtec/apireact/addAlerta.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          nomeIdoso: "João da Silva",
+          tipo: "Queda",
+          dataQueda: dataFormatada,
+          localizacao: "Local não especificado",
+          descricao: "Alerta de SOS ativado pelo idoso"
+        }),
+        timeout: 10000 // 10 segundos de timeout
       })
-      .then((json) => {
-        if (json.sucesso) {
-          navigation.replace("AlertaEnviado");
-        } else {
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Erro HTTP ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((json) => {
+          if (json.sucesso) {
+            navigation.replace("AlertaEnviado");
+          } else {
+            Alert.alert(
+              "Erro",
+              `Erro ao salvar o alerta:\n${json.mensagem || "Erro desconhecido"}`
+            );
+          }
+        })
+        .catch((error) => {
+          console.error('Erro:', error);
           Alert.alert(
             "Erro",
-            `Erro ao salvar o alerta:\n${json.mensagem || "Erro desconhecido"}`
+            "Erro ao salvar o alerta. Por favor, verifique:\n" +
+            "- Sua conexão com a internet\n" +
+            "- Se o servidor está rodando\n" +
+            "- Se o banco de dados está acessível\n" +
+            "Detalhes: " + error.message
           );
-        }
-      })
-      .catch((error) => {
-        console.error('Erro:', error);
-        Alert.alert(
-          "Erro",
-          "Erro ao salvar o alerta. Por favor, verifique:\n" +
-          "- Sua conexão com a internet\n" +
-          "- Se o servidor está rodando\n" +
-          "- Se o banco de dados está acessível\n" +
-          "Detalhes: " + error.message
-        );
-      });
+        });
     } catch (error) {
       console.error('Erro interno:', error);
       Alert.alert(
@@ -129,9 +136,23 @@ export default function HomeIdoso({ navigation }) {
             Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...
           </Text>
           <TouchableOpacity style={styles.cancelarButton} onPress={pararAlerta}>
+
             <Text style={styles.cancelarText}>Cancelar Alerta</Text>
           </TouchableOpacity>
         </>
+      )}
+      {!alertaAtivo && (
+        <TouchableOpacity style={styles.conectarButton} onPress={handleConectarColeteCare}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons
+              name="bluetooth-outline"
+              size={28}
+              color="#fff"
+              style={{ marginRight: 8 }}
+            />
+            <Text style={styles.conectarText}>Conectar ColeteCare</Text>
+          </View>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -176,5 +197,24 @@ const styles = StyleSheet.create({
   cancelarText: {
     color: "#fff",
     fontSize: 20,
+  },
+  conectarButton: {
+    backgroundColor: '#2E86C1',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    position: 'absolute',
+    bottom: 30,
+    alignSelf: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  conectarText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

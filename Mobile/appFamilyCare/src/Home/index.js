@@ -130,7 +130,7 @@ export default function Home({ navigation }) {
             </View>
           </View>
         </ScrollView>
-        <TouchableOpacity style={styles.cadastrarCuidadorButton} onPress={() => navigation.navigate('CadastrarCuidador')}>
+        <TouchableOpacity style={styles.cadastrarCuidadorButton} onPress={() => navigation.navigate('CadastroCuidador')}>
           <Ionicons name="person-add-outline" size={22} color="#fff" style={{ marginRight: 6 }} />
           <Text style={styles.cadastrarCuidadorText}>Cadastrar Cuidador</Text>
         </TouchableOpacity>

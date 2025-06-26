@@ -136,23 +136,26 @@ export default function HomeIdoso({ navigation }) {
             Enviando alerta em {contador} segundo{contador !== 1 ? "s" : ""}...
           </Text>
           <TouchableOpacity style={styles.cancelarButton} onPress={pararAlerta}>
-
             <Text style={styles.cancelarText}>Cancelar Alerta</Text>
           </TouchableOpacity>
         </>
       )}
       {!alertaAtivo && (
-        <TouchableOpacity style={styles.conectarButton} onPress={handleConectarColeteCare}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons
-              name="bluetooth-outline"
-              size={28}
-              color="#fff"
-              style={{ marginRight: 8 }}
-            />
-            <Text style={styles.conectarText}>Conectar ColeteCare</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={{ position: 'absolute', bottom: 30, width: '100%', alignItems: 'center' }}>
+          <TouchableOpacity style={styles.conectarButton} onPress={() => navigation.replace('ConectarColeteCare')}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="bluetooth-outline" size={28} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={styles.conectarText}>Conectar ColeteCare</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={{ height: 24 }} />
+          <TouchableOpacity style={styles.sairButton} onPress={() => navigation.replace('Login')}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="exit-outline" size={28} color="#fff" style={{ marginRight: 8 }} />
+              <Text style={styles.conectarText}>Sair</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -198,13 +201,23 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
   },
+  sairButton: {
+    backgroundColor: '#2E86C1',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    alignSelf: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
   conectarButton: {
     backgroundColor: '#2E86C1',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 25,
-    position: 'absolute',
-    bottom: 30,
     alignSelf: 'center',
     elevation: 5,
     shadowColor: '#000',

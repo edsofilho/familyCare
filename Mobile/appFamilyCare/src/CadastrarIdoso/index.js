@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function CadastrarIdoso({ navigation }) {
@@ -38,7 +38,7 @@ export default function CadastrarIdoso({ navigation }) {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30, paddingBottom: 30 }}>
+    <View style={styles.container}>
       <TouchableOpacity style={styles.botaoVoltar} onPress={() => {
         if (navigation.canGoBack()) {
           navigation.goBack();
@@ -49,141 +49,127 @@ export default function CadastrarIdoso({ navigation }) {
         <Ionicons name="arrow-back" size={20} color="#fff" />
         <Text style={styles.textoBotao}>Voltar</Text>
       </TouchableOpacity>
-      <Text style={styles.titulo}>Cadastro de Idoso</Text>
-      <View style={styles.formBox}>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Nome *</Text>
+      <ScrollView style={{width: '100%'}} contentContainerStyle={{alignItems: 'center', justifyContent: 'center'}} showsVerticalScrollIndicator={false}>
+        <Image source={require('../../assets/logo.png')} style={styles.logo} />
+        <Text style={styles.titulo}>Cadastro de Idoso</Text>
+        <View style={styles.formBox}>
           <TextInput
             style={styles.input}
             value={formData.nome}
             onChangeText={(text) => handleChange('nome', text)}
-            placeholder="Digite o nome completo"
+            placeholder="Nome"
+            placeholderTextColor="#999"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Idade *</Text>
           <TextInput
             style={styles.input}
             value={formData.idade}
             onChangeText={(text) => handleChange('idade', text)}
-            placeholder="Ex: 82"
+            placeholder="Idade"
+            placeholderTextColor="#999"
             keyboardType="numeric"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Sexo *</Text>
           <TextInput
             style={styles.input}
             value={formData.sexo}
             onChangeText={(text) => handleChange('sexo', text)}
-            placeholder="Masculino ou Feminino"
+            placeholder="Sexo"
+            placeholderTextColor="#999"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Altura *</Text>
           <TextInput
             style={styles.input}
             value={formData.altura}
             onChangeText={(text) => handleChange('altura', text)}
-            placeholder="Ex: 1,72 m"
+            placeholder="Altura"
+            placeholderTextColor="#999"
             keyboardType="decimal-pad"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Peso *</Text>
           <TextInput
             style={styles.input}
             value={formData.peso}
             onChangeText={(text) => handleChange('peso', text)}
-            placeholder="Ex: 68 kg"
+            placeholder="Peso"
+            placeholderTextColor="#999"
             keyboardType="decimal-pad"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Condições *</Text>
           <TextInput
             style={styles.input}
             value={formData.condicoes}
             onChangeText={(text) => handleChange('condicoes', text)}
-            placeholder="Ex: Hipertensão, Diabetes tipo 2"
+            placeholder="Condições"
+            placeholderTextColor="#999"
           />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Contato de Emergência *</Text>
           <TextInput
             style={styles.input}
             value={formData.contatoEmergencia}
             onChangeText={(text) => handleChange('contatoEmergencia', text)}
-            placeholder="Nome e telefone do contato"
+            placeholder="Contato de Emergência"
+            placeholderTextColor="#999"
           />
+          <TouchableOpacity style={styles.botao} onPress={handleSubmit}>
+            <Text style={styles.textoBotao}>Cadastrar</Text>
+          </TouchableOpacity>
+          <View style={{ height: 40 }} />
         </View>
-        <TouchableOpacity style={styles.botao} onPress={handleSubmit}>
-          <Text style={styles.textoBotao}>Cadastrar Idoso</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 30,
+    backgroundColor: '#fff'
+  },
+  logo: {
+    width: 180,
+    height: 180,
+    marginBottom: 30,
+  },
   botaoVoltar: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
+    backgroundColor: '#2E86C1',
     padding: 10,
     borderRadius: 8,
-    backgroundColor: '#2980B9',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  textoBotao: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
+    justifyContent: 'center',
+    marginTop: 10,
+    alignSelf: 'flex-start',
+    marginBottom: 10,
   },
   titulo: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 30,
+    color: '#2E86C1',
+    marginBottom: 16,
   },
   formBox: {
     width: '100%',
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 5,
   },
   input: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    width: '100%',
+    height: 50,
+    backgroundColor: '#f1f1f1',
+    borderRadius: 25,
+    paddingHorizontal: 16,
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#333',
   },
   botao: {
-    backgroundColor: '#2980B9',
-    padding: 15,
+    backgroundColor: '#2E86C1',
+    width: '100%',
+    height: 50,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
+    marginTop: 10,
   },
   textoBotao: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

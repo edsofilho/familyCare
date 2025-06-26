@@ -25,7 +25,7 @@ export default function Cadastro({navigation}) {
          }
         }
          catch (error) {
-            alert('Erro de conexão' +  error.message);
+            alert('Erro de conexão: ' + error.message);
          }
     };
 

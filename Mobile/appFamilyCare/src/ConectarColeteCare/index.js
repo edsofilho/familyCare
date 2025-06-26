@@ -45,10 +45,10 @@ export default function ConectarColeteCare({ navigation }) {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.connectButton}>
+        <TouchableOpacity style={styles.connectButton} onPress={handleHomeIdoso}>
           <Text style={styles.connectButtonText}>Conectar</Text>
         </TouchableOpacity>
-
+        <View style={{ height: 20 }} />
         <TouchableOpacity style={styles.backButton} onPress={handleHomeIdoso}>
           <Text style={styles.backButtonText}>Voltar</Text>
         </TouchableOpacity>

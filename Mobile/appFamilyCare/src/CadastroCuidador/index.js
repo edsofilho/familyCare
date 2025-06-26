@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function CadastroCuidador({navigation}) {
     const [nome, setNome] = useState('');
@@ -31,6 +32,10 @@ export default function CadastroCuidador({navigation}) {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.botaoVoltar} onPress={() => navigation.goBack()}>
+                <Ionicons name="arrow-back" size={20} color="#fff" />
+                <Text style={styles.textoBotao}>Voltar</Text>
+            </TouchableOpacity>
             <Image source={require('../../assets/logo.png')} style={styles.logo} />
             <Text style={styles.titulo}>Cadastro de Cuidador</Text>
             <TextInput
@@ -78,10 +83,7 @@ export default function CadastroCuidador({navigation}) {
             <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
                 <Text style={styles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                <Text style={styles.linkLogin}>Entrar</Text>
-            </TouchableOpacity>
+            <View style={{ height: 40 }} />
         </View>
     );
 }
@@ -93,12 +95,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 30,
         backgroundColor: '#fff'
-    },
-    titulo: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#2E86C1',
-        marginBottom: 16,
     },
     logo: {
         width: 180,
@@ -125,6 +121,28 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     textoBotao: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    botaoVoltar: {
+        backgroundColor: '#2E86C1',
+        padding: 10,
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        alignSelf: 'flex-start',
+        marginBottom: 10,
+    },
+    titulo: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2E86C1',
+        marginBottom: 16,
+    },
+    textoBotaoVoltar: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',

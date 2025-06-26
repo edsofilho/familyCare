@@ -16,7 +16,7 @@ export default function Cadastro({navigation}) {
     }
 
     try {
-        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
+        const res = await axios.post('http://192.168.3.148/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
          if (res.data.status === 'sucesso') {
             navigation.replace('Login');
          }

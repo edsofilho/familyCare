@@ -47,7 +47,7 @@ export default function CadastrarIdoso({ navigation }) {
       <View style={styles.formContainer}>
         <View style={styles.header}>
           <Text style={styles.title}>Cadastrar Idoso</Text>
-          <Ionicons name="person-add-outline" size={40} color="#4CAF50" />
+          <Ionicons name="person-add-outline" size={40} color="#2980B9" />
         </View>
 
         <View style={styles.inputGroup}>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   submitButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#2980B9',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',

@@ -21,7 +21,7 @@ export default function Home({ navigation }) {
   const handleCadastrarIdoso = () => {
     navigation.replace('CadastrarIdoso');
   };
-  
+
   // const handleTratamentos = () => {
   //   navigation.replace('Tratamentos');
   // };
@@ -39,18 +39,18 @@ export default function Home({ navigation }) {
             <Ionicons
               name="warning-outline"
               size={28}
-              color="#ff0000"
+              color="#fff"
               style={{ marginLeft: 8 }}
             />
           </View>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.cadastrarButton} onPress={handleCadastrarIdoso}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Ionicons
               name="person-add-outline"
               size={28}
-              color="#4CAF50"
+              color="#fff"
               style={{ marginRight: 8 }}
             />
             <Text style={styles.cadastrarText}>Cadastrar Idoso</Text>
@@ -58,24 +58,30 @@ export default function Home({ navigation }) {
         </TouchableOpacity>
 
         <View>
-          <TouchableOpacity style={styles.Framelinks} onPress={handleInforma}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.alertaText}>Cláudio</Text>
-              <Ionicons
-                name="warning-outline"
-                size={28}
-                color="#ff0000"
-                style={{ marginLeft: 8 }}
-              />
-            </View>
-          </TouchableOpacity>
 
           <View>
             <TouchableOpacity style={styles.Framelinks} onPress={handleInforma}>
-              <Text>Informações</Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Ionicons
+                  name="information-circle-outline"
+                  size={28}
+                  color="#fff"
+                  style={{ marginRight: 8 }}
+                />
+              
+              <Text style={styles.linkText}>Informações</Text>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity style={styles.Framelinks} onPress={handleMedi}>
-              <Text>Medicamentos</Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Ionicons
+                  name="medkit-outline"
+                  size={28}
+                  color="#fff"
+                  style={{ marginRight: 8 }}
+                />
+                <Text style={styles.linkText}>Medicamentos</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -98,89 +104,105 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 30,
   },
-  logoutButton: {
-    backgroundColor: "#e74c3c",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
+
+  parteIdoso: {
+    alignItems: "center",
+    width: "100%",
   },
-  logoutText: {
+
+  NomeCuidador: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#2c3e50",
+    marginBottom: 16,
+  },
+
+  alertaLink: {
+    backgroundColor: "#2980B9",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: 220,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  alertaText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "bold",
   },
+
   cadastrarButton: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#4CAF50",
-    width: 200,
+    backgroundColor: "#2E86C1",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: 220,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 12,
   },
+
   cadastrarText: {
-    color: "#4CAF50",
-    fontSize: 18,
+    color: "#fff",
+    fontSize: 17,
     fontWeight: "bold",
   },
+
+  Framelinks: {
+    backgroundColor: "#2E86C1",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: 220,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  linkText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  parteCuidadores: {
+    backgroundColor: "#D6EAF8",
+    width: "90%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
   tituloCuidadores: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 8,
+    color: "#154360",
   },
+
   textoCuidadores: {
     fontSize: 16,
-    marginBottom: 5,
-    color: "#333",
+    marginBottom: 4,
+    color: "#34495E",
   },
-  alertaLink: {
-    backgroundColor: "#fff",
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#ff0000",
-    width: 200,
-    alignItems: "center",
+
+  logoutButton: {
+    backgroundColor: "#C0392B",
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 30,
+    elevation: 4,
     marginBottom: 10,
   },
-  alertaText: {
-    color: "#ff0000",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  Framelinks: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: "#4CAF50",
-    width: 200,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  linkText: {
-    color: "#4CAF50",
+
+  logoutText: {
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-  },
-  NomeCuidador: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  parteIdoso: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  parteCuidadores: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

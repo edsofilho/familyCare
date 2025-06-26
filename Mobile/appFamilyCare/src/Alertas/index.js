@@ -9,6 +9,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import axios from "axios";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Alerta({ navigation }) {
   const [alertas, setAlertas] = useState([]); // Definindo o estado para os alertas
@@ -39,10 +40,10 @@ export default function Alerta({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {/* <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
+        <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
           <Ionicons name="arrow-back" size={20} color="#fff" />
           <Text style={styles.textoBotao}>Voltar</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       <ScrollView>
@@ -58,8 +59,7 @@ export default function Alerta({ navigation }) {
           <Text style={styles.semAlertas}>Nenhum alerta encontrado.</Text>
         )}
       </ScrollView>
-      <Button title="Atualizar" onPress={listarAlertas}></Button>
-      <Button title="Voltar" onPress={handleHome}></Button>
+      <TouchableOpacity style={styles.botaoAtualizar} onPress={listarAlertas}><Text style={styles.textoBotao}>Atualizar</Text></TouchableOpacity>
     </View>
   );
 }
@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   botaoVoltar: {
-    top: 40,
+    position: 'absolute',
+    top: 20,
     left: 20,
     backgroundColor: "#2E86C1",
     padding: 10,
@@ -110,4 +111,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 5,
   },
+  botaoAtualizar: {
+    flexDirection: 'row',
+    backgroundColor: '#2E86C1',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  botaoVoltar: {
+    backgroundColor: "#2E86C1",
+    padding: 10,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
 });

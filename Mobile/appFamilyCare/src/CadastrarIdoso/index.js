@@ -5,17 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 export default function CadastrarIdoso({ navigation }) {
   const [formData, setFormData] = useState({
     nome: '',
-    dataNascimento: '',
-    cpf: '',
-    endereco: '',
-    telefone: '',
-    email: '',
-    nomeResponsavel: '',
-    telefoneResponsavel: '',
-    emailResponsavel: '',
-    medicacoes: '',
-    alergias: '',
-    observacoes: ''
+    idade: '',
+    sexo: '',
+    altura: '',
+    peso: '',
+    condicoes: '',
+    contatoEmergencia: '',
   });
 
   const handleChange = (field, value) => {
@@ -27,7 +22,7 @@ export default function CadastrarIdoso({ navigation }) {
 
   const handleSubmit = () => {
     // Validar campos obrigatórios
-    if (!formData.nome || !formData.dataNascimento || !formData.cpf || !formData.telefone) {
+    if (!formData.nome || !formData.idade || !formData.sexo || !formData.altura || !formData.peso || !formData.condicoes || !formData.contatoEmergencia) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
       return;
     }
@@ -43,13 +38,19 @@ export default function CadastrarIdoso({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.formContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Cadastrar Idoso</Text>
-          <Ionicons name="person-add-outline" size={40} color="#4CAF50" />
-        </View>
-
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30, paddingBottom: 30 }}>
+      <TouchableOpacity style={styles.botaoVoltar} onPress={() => {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        } else {
+          navigation.replace('Home');
+        }
+      }}>
+        <Ionicons name="arrow-back" size={20} color="#fff" />
+        <Text style={styles.textoBotao}>Voltar</Text>
+      </TouchableOpacity>
+      <Text style={styles.titulo}>Cadastro de Idoso</Text>
+      <View style={styles.formBox}>
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nome *</Text>
           <TextInput
@@ -59,143 +60,65 @@ export default function CadastrarIdoso({ navigation }) {
             placeholder="Digite o nome completo"
           />
         </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Data de Nascimento *</Text>
+          <Text style={styles.label}>Idade *</Text>
           <TextInput
             style={styles.input}
-            value={formData.dataNascimento}
-            onChangeText={(text) => handleChange('dataNascimento', text)}
-            placeholder="DD/MM/AAAA"
+            value={formData.idade}
+            onChangeText={(text) => handleChange('idade', text)}
+            placeholder="Ex: 82"
             keyboardType="numeric"
           />
         </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>CPF *</Text>
+          <Text style={styles.label}>Sexo *</Text>
           <TextInput
             style={styles.input}
-            value={formData.cpf}
-            onChangeText={(text) => handleChange('cpf', text)}
-            placeholder="000.000.000-00"
-            keyboardType="numeric"
+            value={formData.sexo}
+            onChangeText={(text) => handleChange('sexo', text)}
+            placeholder="Masculino ou Feminino"
           />
         </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Endereço *</Text>
+          <Text style={styles.label}>Altura *</Text>
           <TextInput
             style={styles.input}
-            value={formData.endereco}
-            onChangeText={(text) => handleChange('endereco', text)}
-            placeholder="Rua, número, bairro, cidade"
+            value={formData.altura}
+            onChangeText={(text) => handleChange('altura', text)}
+            placeholder="Ex: 1,72 m"
+            keyboardType="decimal-pad"
           />
         </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Telefone *</Text>
+          <Text style={styles.label}>Peso *</Text>
           <TextInput
             style={styles.input}
-            value={formData.telefone}
-            onChangeText={(text) => handleChange('telefone', text)}
-            placeholder="(00) 00000-0000"
-            keyboardType="phone-pad"
+            value={formData.peso}
+            onChangeText={(text) => handleChange('peso', text)}
+            placeholder="Ex: 68 kg"
+            keyboardType="decimal-pad"
           />
         </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email</Text>
+          <Text style={styles.label}>Condições *</Text>
           <TextInput
             style={styles.input}
-            value={formData.email}
-            onChangeText={(text) => handleChange('email', text)}
-            placeholder="email@exemplo.com"
-            keyboardType="email-address"
+            value={formData.condicoes}
+            onChangeText={(text) => handleChange('condicoes', text)}
+            placeholder="Ex: Hipertensão, Diabetes tipo 2"
           />
         </View>
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Informações do Responsável</Text>
-        </View>
-
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Nome do Responsável *</Text>
+          <Text style={styles.label}>Contato de Emergência *</Text>
           <TextInput
             style={styles.input}
-            value={formData.nomeResponsavel}
-            onChangeText={(text) => handleChange('nomeResponsavel', text)}
-            placeholder="Nome completo do responsável"
+            value={formData.contatoEmergencia}
+            onChangeText={(text) => handleChange('contatoEmergencia', text)}
+            placeholder="Nome e telefone do contato"
           />
         </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Telefone do Responsável *</Text>
-          <TextInput
-            style={styles.input}
-            value={formData.telefoneResponsavel}
-            onChangeText={(text) => handleChange('telefoneResponsavel', text)}
-            placeholder="(00) 00000-0000"
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Email do Responsável</Text>
-          <TextInput
-            style={styles.input}
-            value={formData.emailResponsavel}
-            onChangeText={(text) => handleChange('emailResponsavel', text)}
-            placeholder="email@exemplo.com"
-            keyboardType="email-address"
-          />
-        </View>
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Informações Médicas</Text>
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Medicações</Text>
-          <TextInput
-            style={[styles.input, styles.multiline]}
-            value={formData.medicacoes}
-            onChangeText={(text) => handleChange('medicacoes', text)}
-            placeholder="Medicações em uso"
-            multiline
-            numberOfLines={4}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Alergias</Text>
-          <TextInput
-            style={[styles.input, styles.multiline]}
-            value={formData.alergias}
-            onChangeText={(text) => handleChange('alergias', text)}
-            placeholder="Alergias conhecidas"
-            multiline
-            numberOfLines={4}
-          />
-        </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Observações</Text>
-          <TextInput
-            style={[styles.input, styles.multiline]}
-            value={formData.observacoes}
-            onChangeText={(text) => handleChange('observacoes', text)}
-            placeholder="Informações adicionais"
-            multiline
-            numberOfLines={4}
-          />
-        </View>
-
-        <TouchableOpacity style={styles.submitButton} onPress={handleHome}>
-          <Text style={styles.submitButtonText}>Cadastrar Idoso</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.cancelButton} onPress={handleHome}>
-          <Text style={styles.cancelButtonText}>Cancelar</Text>
+        <TouchableOpacity style={styles.botao} onPress={handleSubmit}>
+          <Text style={styles.textoBotao}>Cadastrar Idoso</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -203,22 +126,38 @@ export default function CadastrarIdoso({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  formContainer: {
-    padding: 20,
-  },
-  header: {
+  botaoVoltar: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#2980B9',
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
   },
-  title: {
+  textoBotao: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  titulo: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 10,
+    marginBottom: 30,
+  },
+  formBox: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   inputGroup: {
     marginBottom: 20,
@@ -235,41 +174,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  multiline: {
-    height: 120,
-    textAlignVertical: 'top',
-  },
-  sectionHeader: {
-    marginTop: 30,
-    marginBottom: 15,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  submitButton: {
-    backgroundColor: '#4CAF50',
+  botao: {
+    backgroundColor: '#2980B9',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 10,
+    marginTop: 20,
   },
-  submitButtonText: {
+  textoBotao: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  cancelButton: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  cancelButtonText: {
-    color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
   },

@@ -13,6 +13,7 @@ import HomeIdoso from './src/HomeIdoso'
 import Doencas from './src/Doencas';
 import AlertaEnviado from './src/AlertaEnviado';
 import CadastrarIdoso from './src/CadastrarIdoso';
+import CadastrarCuidador from './src/CadastrarCuidador';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,10 +49,11 @@ export default function App() {
         <Stack.Screen name='Alertas' component={Alerta}/>
         <Stack.Screen name='Informa' component={Informa}/>
         <Stack.Screen name='Medi' component={Medi}/>
-        <Stack.Screen name='HomeIdoso' component={HomeIdoso}></Stack.Screen>
+        <Stack.Screen name='HomeIdoso' component={HomeIdoso}/>
         <Stack.Screen name='Doencas' component={Doencas}/>
         <Stack.Screen name='AlertaEnviado' component={AlertaEnviado}/>
         <Stack.Screen name='CadastrarIdoso' component={CadastrarIdoso}/>
+        <Stack.Screen name='CadastrarCuidador' component={CadastrarCuidador}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

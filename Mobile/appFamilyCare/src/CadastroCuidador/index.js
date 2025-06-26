@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import axios from 'axios';
 
-export default function Cadastro({navigation}) {
+export default function CadastroCuidador({navigation}) {
     const [nome, setNome] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ export default function Cadastro({navigation}) {
     }
 
     try {
-        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
+        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addCuidador.php', {nome, telefone, email,senha});
          if (res.data.sucesso) {
             navigation.replace('Login');
          }
@@ -32,6 +32,7 @@ export default function Cadastro({navigation}) {
     return (
         <View style={styles.container}>
             <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <Text style={styles.titulo}>Cadastro de Cuidador</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Nome"
@@ -93,8 +94,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         backgroundColor: '#fff'
     },
-    text: {
+    titulo: {
         fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2E86C1',
+        marginBottom: 16,
     },
     logo: {
         width: 180,
@@ -131,4 +135,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textDecorationLine: 'underline',
     },
-});
+}); 

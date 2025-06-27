@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -98,71 +99,73 @@ export default function Medi({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.botaoVoltar} onPress={handleVoltar}>
-          <Ionicons name="arrow-back" size={20} color="#fff" />
-          <Text style={styles.textoBotao}>Voltar</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.titulo}>Medicamentos do dia</Text>
-
-      <FlatList
-        data={remedios}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
-
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => setModalVisible(true)}
-      >
-        <Ionicons name="add-circle" size={50} color="#2E86C1" />
-      </TouchableOpacity>
-
-      {/* Modal de cadastro de novo remédio */}
-      <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Novo Remédio</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Nome do remédio"
-              value={novoNome}
-              onChangeText={setNovoNome}
-            />
-            <TouchableOpacity
-              onPress={() => setMostrarRelogio(true)}
-              style={styles.input}
-            >
-              <Text
-                style={{ fontSize: 16, color: novoHorario ? "#000" : "#888" }}
-              >
-                {novoHorario || "Selecione o horário"}
-              </Text>
-            </TouchableOpacity>
-            {mostrarRelogio && (
-              <DateTimePicker
-                value={horaSelecionada}
-                mode="time"
-                is24Hour={true}
-                display="default"
-                onChange={onChangeHora}
-              />
-            )}
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={adicionarRemedio}
-            >
-              <Text style={styles.modalButtonText}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.cancelar}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
+    <ScrollView style={{ flex: 1, backgroundColor: '#fff' }} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start', paddingHorizontal: 20, paddingTop: 60 }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.botaoVoltar} onPress={handleVoltar}>
+            <Ionicons name="arrow-back" size={20} color="#fff" />
+            <Text style={styles.textoBotao}>Voltar</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
-    </View>
+        <Text style={styles.titulo}>Medicamentos do dia</Text>
+
+        <FlatList
+          data={remedios}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Ionicons name="add-circle" size={50} color="#2E86C1" />
+        </TouchableOpacity>
+
+        {/* Modal de cadastro de novo remédio */}
+        <Modal visible={modalVisible} transparent animationType="slide">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Novo Remédio</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Nome do remédio"
+                value={novoNome}
+                onChangeText={setNovoNome}
+              />
+              <TouchableOpacity
+                onPress={() => setMostrarRelogio(true)}
+                style={styles.input}
+              >
+                <Text
+                  style={{ fontSize: 16, color: novoHorario ? "#000" : "#888" }}
+                >
+                  {novoHorario || "Selecione o horário"}
+                </Text>
+              </TouchableOpacity>
+              {mostrarRelogio && (
+                <DateTimePicker
+                  value={horaSelecionada}
+                  mode="time"
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChangeHora}
+                />
+              )}
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={adicionarRemedio}
+              >
+                <Text style={styles.modalButtonText}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text style={styles.cancelar}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 }
 

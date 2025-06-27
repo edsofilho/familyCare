@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function Cadastro({navigation}) {
+export default function CadastroCuidador({navigation}) {
     const [nome, setNome] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ export default function Cadastro({navigation}) {
     }
 
     try {
-        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
+        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addCuidador.php', {nome, telefone, email,senha});
          if (res.data.sucesso) {
             navigation.replace('Login');
          }
@@ -25,13 +26,18 @@ export default function Cadastro({navigation}) {
          }
         }
          catch (error) {
-            alert('Erro de conexão: ' + error.message);
+            alert('Erro de conexão' +  error.message);
          }
     };
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.botaoVoltar} onPress={() => navigation.goBack()}>
+                <Ionicons name="arrow-back" size={20} color="#fff" />
+                <Text style={styles.textoBotao}>Voltar</Text>
+            </TouchableOpacity>
             <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <Text style={styles.titulo}>Cadastro de Cuidador</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Nome"
@@ -77,10 +83,7 @@ export default function Cadastro({navigation}) {
             <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
                 <Text style={styles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                <Text style={styles.linkLogin}>Entrar</Text>
-            </TouchableOpacity>
+            <View style={{ height: 40 }} />
         </View>
     );
 }
@@ -92,9 +95,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 30,
         backgroundColor: '#fff'
-    },
-    text: {
-        fontSize: 24,
     },
     logo: {
         width: 180,
@@ -125,10 +125,32 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
+    botaoVoltar: {
+        backgroundColor: '#2E86C1',
+        padding: 10,
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 10,
+        alignSelf: 'flex-start',
+        marginBottom: 10,
+    },
+    titulo: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2E86C1',
+        marginBottom: 16,
+    },
+    textoBotaoVoltar: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
     linkLogin: {
         marginTop: 20,
         color: '#2E86C1',
         fontSize: 16,
         textDecorationLine: 'underline',
     },
-});
+}); 

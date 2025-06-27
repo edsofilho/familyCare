@@ -14,7 +14,6 @@
   </head>
 
   <body>
-    <!-- nav -->
     <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
@@ -28,10 +27,10 @@
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav me-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#tela1">Tela 1</a>
+              <a class="nav-link" href="#introducao">Introdução</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#tela2">Tela 2</a>
+              <a class="nav-link" href="#tela1">Telas</a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="#feedbacks">Feedbacks</a>
@@ -39,10 +38,6 @@
         </div>
       </div>
     </nav>
-    
-    
-      <!-- fim da nav -->
-       
 
     <div class="container my-5">
       <div class="text-center mb-5">
@@ -54,127 +49,160 @@
 
       <div class="row g-3">
 
-        <div class="col-12">
+        <div class="col-12" id="introducao">
           <div class="card shadow">
             <div class="card-body">
               <h5 class="card-title text-primary-emphasis">O que é?</h5>
-              <p class="card-text">FamilyCare é um aplicativo desenvolvido para oferecer mais segurança e tranquilidade a idosos e seus familiares. Seu principal objetivo é notificar cuidadores imediatamente em casos de emergência, como quedas, que representam um risco significativo à saúde na terceira idade.
-              O app funciona em conjunto com um colete equipado com sensores de queda, que detectam movimentos bruscos. Ao identificar uma possível queda, o sistema envia alertas em tempo real para os cuidadores cadastrados, possibilitando uma resposta rápida e eficaz.
-            Além do sensor de quedas, o aplicativo voltado para o idoso conta com um botão de SOS, que pode ser acionado manualmente em qualquer situação de urgência, oferecendo mais autonomia e segurança.
+              <p class="card-text">FamilyCare é um aplicativo desenvolvido para oferecer mais segurança e tranquilidade a idosos e seus familiares. Seu principal objetivo é notificar cuidadores imediatamente em casos de emergência, como quedas, que representam um risco significativo à saúde na terceira idade. O app funciona em conjunto com um colete equipado com sensores de queda, que detectam movimentos bruscos. Ao identificar uma possível queda, o sistema envia alertas em tempo real para os cuidadores cadastrados, possibilitando uma resposta rápida e eficaz. Além do sensor de quedas, o aplicativo voltado para o idoso conta com um botão de SOS, que pode ser acionado manualmente em qualquer situação de urgência, oferecendo mais autonomia e segurança.
+                </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row align-items-start mt-5">
+          <div class="col-md-6 text-center">
+            <img src="{{ url_for('static', filename='images/idoso.png') }}" alt="Imagem de idoso" class="img-fluid rounded" style="max-width: 70%;">
+          </div>
+
+          <div class="col-md-6">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title text-primary-emphasis">Por que o FamilyCare é essencial?</h5>
+                <p class="card-text">As quedas são uma das principais causas de acidentes com idosos, podendo resultar em fraturas, perda de mobilidade, internações e redução da autonomia. Cerca de 30% dos idosos caem ao menos uma vez por ano, muitas vezes dentro de casa. Nesse contexto, o tempo de resposta é crucial. O FamilyCare oferece uma solução eficaz ao detectar automaticamente quedas e acionar imediatamente cuidadores e serviços de emergência, garantindo segurança, agilidade no socorro e tranquilidade para idosos e seus familiares.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-md-6 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary-emphasis">O colete:</h5>
+              <p class="card-text">Desenvolvemos um equipamento tecnológico acoplado a um colete confortável, ideal para o uso diário do idoso. Com sensores inteligentes, o dispositivo detecta quedas bruscas em tempo real e aciona automaticamente cuidadores e serviços de emergência cadastrados. Seu principal objetivo é garantir uma resposta rápida em situações em que o idoso não consegue pedir ajuda, promovendo mais segurança, autonomia e tranquilidade para ele e sua rede de apoio.
               </p>
             </div>
           </div>
         </div>
-
-        <div class="col-12">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title text-primary-emphasis">Por que o FamilyCare é essencial?</h5>
-              <p class="card-text">As quedas estão entre as principais causas de acidentes com idosos, podendo levar a complicações sérias como fraturas, perda de mobilidade e hospitalizações prolongadas. Dados do Ministério da Saúde apontam que cerca de 30% dos idosos caem ao menos uma vez por ano, e muitos desses casos ocorrem dentro de casa. A ação rápida após uma queda pode fazer a diferença entre uma recuperação tranquila ou complicações mais graves.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title text-primary-emphasis">Funcionalidades:</h5>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">Sensor inteligente de queda embutido no colete</li>
-                <li class="list-group-item">Notificações de medicamentos</li>
-                <li class="list-group-item">Envio automático de alertas para o celular dos cuidadores</li>
-                <li class="list-group-item">Funcionalidades exclusivas para cuidadores: agenda, notificações e comunicação</li>
-                <li class="list-group-item">Interface simples, prática e intuitiva</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-      <div class="col-12 mt-4">
-        <div class="card shadow">
-          <div class="card-body">
-            <h5 class="card-title text-primary-emphasis">Nossos objetivos</h5>
-            <p class="card-text">
-              Family Care é um aplicativo desenvolvido com o objetivo de auxiliar no cuidado de idosos,
-               promovendo segurança, bem-estar e acompanhamento contínuo por parte de familiares e cuidadores. 
-               O app permite o monitoramento de rotinas diárias, medicações, consultas médicas e sinais vitais,
-               além de enviar alertas em caso de emergências. Com uma interface simples e acessível, 
-               o Family Care busca fortalecer o vínculo entre idosos, cuidadores e familiares, 
-               oferecendo suporte prático para uma vida mais saudável e independente na terceira idade.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 mt-4" id="tela1">
-        <div class="card shadow">
-          <div class="card-body">
-            <h5 class="card-title text-primary-emphasis">tela print</h5>
-            <!-- espaço para prints-->
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 mt-4" id="tela2">
-        <div class="card shadow">
-          <div class="card-body">
-            <h5 class="card-title text-primary-emphasis">tela print</h5>
-            <!-- espaço para prints-->
-            </p>
-          </div>
-        </div>
-      </div>
         
-      <div class="mt-5">
-      <h2>Envie seu Feedback</h2><br>
-      <details>
-        <summary>Deixe seu feedback</summary>
-        <div class="col-md-6 mt-3" id="feedbacks">
-          <form method="POST">
-            <input type="text" name="nome" placeholder="Seu nome" class="form-control mb-2" required>
-            <input type="email" name="email" placeholder="Seu e-mail" class="form-control mb-2" required>
-            <input type="text" name="assunto" placeholder="Assunto" class="form-control mb-2">
-            <textarea name="mensagem" rows="4" placeholder="Escreva aqui seu feedback..." class="form-control mb-3" required></textarea>
-            <input type="submit" value="Enviar" class="btn btn-success">
-            <input type="reset" value="Limpar" class="btn btn-danger ms-2">
-          </form>
+        <div class="col-md-4 mt-5 text-end">
+          <img src="{{ url_for('static', filename='images/arduino.png') }}" alt="Imagem do Arduino" class="img-fluid rounded" style="max-width: 90%;">
         </div>
-      </details>
 
-      <hr>
+        
+        <div class="row mt-4" id="tela1">
+          <div class="col-md-4 text-center">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title text-primary-emphasis">Tela do Cuidador</h5>
+                <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app"
+                    class="img-fluid rounded"
+                    style="width: 50%; height: auto;">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7 d-flex align-items-center">
+            <div>
+              <h5>Descrição:</h5>
+              <p>
+                Neste exemplo de tela do cuidador, aparece um card indicando que há notificação do idoso Cláudio, mostradno botões para acessar as informações, os medicamentos e as doenças dele. Mais à baixo aparecem outros cuidadores do idosoe um botão de saída para retornar ao login.
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <!-- Lista de Feedbacks -->
-      <h4>Feedbacks Recebidos</h4>
-      <table class="table table-bordered table-hover" id="feedback">
-        <thead class="table-dark">
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Assunto</th>
-            <th>Mensagem</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for f in feedbacks %}
-          <tr>
-            <td>{{ f.nome }}</td>
-            <td>{{ f.email }}</td>
-            <td>{{ f.assunto }}</td>
-            <td>{{ f.mensagem }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    </div>
+        <div class="row mt-4">
+          <div class="col-md-4 text-center">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title text-primary-emphasis">Tela de SOS</h5>
+                <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app"
+                    class="img-fluid rounded"
+                    style="width: 50%; height: auto;">
+              </div>
+            </div>
+          </div>
+          <div class="col-md-7 d-flex align-items-center">
+            <div>
+              <h5>Descrição:</h5>
+              <p>
+                Esta tela representa a funcionalidade de SOS no aplicativo do idoso, após o clique aparece uma tela de cancelamento caso toque por engano, se não for cancelado, um alerta será enviado ao cuidador.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title text-primary-emphasis">Quem somos nós</h5>
+              <p class="card-text">
+                Somos estudantes e desenvolvedores dedicados à criação de soluções tecnológicas que promovem o bem-estar de idosos e o apoio aos seus cuidadores. Nosso objetivo é unir conhecimento e empatia para transformar cuidado em segurança e dignidade.
+              </p>
+              <div class="row text-center mt-4">
+                <div class="col-md-4 mb-3">
+                  <img src="{{ url_for('static', filename='images/edson.jpeg') }}" alt="Membro 1" class="img-fluid rounded" style="max-width: 80%;">
+                  <p class="mt-2">Edson</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <img src="{{ url_for('static', filename='images/arthur.jpeg') }}" alt="Membro 2" class="img-fluid rounded" style="max-width: 80%;">
+                  <p class="mt-2">Arthur</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <img src="{{ url_for('static', filename='images/nardes.jpeg') }}" alt="Membro 3" class="img-fluid rounded" style="max-width: 83%;">
+                  <p class="mt-2">Ana Nardes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          
+        <div class="mt-5">
+          <h2>Envie seu Feedback</h2><br>
+          <details>
+            <summary>Deixe seu feedback</summary>
+            <div class="col-md-6 mt-3" id="feedbacks">
+              <form method="POST">
+                <input type="text" name="nome" placeholder="Seu nome" class="form-control mb-2" required>
+                <input type="email" name="email" placeholder="Seu e-mail" class="form-control mb-2" required>
+                <input type="text" name="assunto" placeholder="Assunto" class="form-control mb-2">
+                <textarea name="mensagem" rows="4" placeholder="Escreva aqui seu feedback..." class="form-control mb-3" required></textarea>
+                <input type="submit" value="Enviar" class="btn btn-success">
+                <input type="reset" value="Limpar" class="btn btn-danger ms-2">
+              </form>
+        </div>
+        </details>
+
+        <hr>
+
+        <h4>Feedbacks Recebidos</h4>
+        <table class="table table-bordered table-hover" id="feedback">
+          <thead class="table-dark">
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Assunto</th>
+              <th>Mensagem</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in feedbacks %}
+            <tr>
+              <td>{{ f.nome }}</td>
+              <td>{{ f.email }}</td>
+              <td>{{ f.assunto }}</td>
+              <td>{{ f.mensagem }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     
     <footer class="rodape">
       <p> © Direitos reservados, feito por
         <div class="d-flex gap-2 justify-content-center flex-wrap">
-          <a href="https://github.com/edsofilho" class="btn btn-dark">Edson</a>
-          <a href="https://github.com/OThurzn" class="btn btn-dark">Arthur</a>
-          <a href="https://github.com/anardes" class="btn btn-dark">Ana Nardes</a>
+          <a href="https://github.com/edsofilho" style="color: #4b9139">Edson</a>,
+          <a href="https://github.com/OThurzn" style="color: #2f7cd4;">Arthur</a> &
+          <a href="https://github.com/anardes" style="color: rgb(221, 63, 169);">Ana Nardes</a>
         </div>
       </p>
 

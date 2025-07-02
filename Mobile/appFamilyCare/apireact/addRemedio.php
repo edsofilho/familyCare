@@ -1,30 +1,55 @@
 <?php
-include('conexão.php');
-
+// Headers CORS para permitir requisições do app
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
 
-$data = json_decode(file_get_contents("php://input"), true);
+// Responder a requisições OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
-if (!empty($data['nome']) && !empty($data['horario'])) {
-    $conn = new mysqli("localhost", "usuario", "senha", "banco");
+include_once('conexao.php');
 
-    if ($conn->connect_error) {
-        echo json_encode(["status" => "erro", "mensagem" => "Falha na conexão."]);
-        exit;
-    }
+$postjson = json_decode(file_get_contents('php://input'), true);
 
-    $nome = $conn->real_escape_string($data['nome']);
-    $horario = $conn->real_escape_string($data['horario']);
+$nome = isset($postjson['nome']) ? trim($postjson['nome']) : '';
+$horario = isset($postjson['horario']) ? trim($postjson['horario']) : '';
+$familiaId = isset($postjson['familiaId']) ? intval($postjson['familiaId']) : null;
+$idosoId = isset($postjson['idosoId']) ? intval($postjson['idosoId']) : null;
+$remedioId = isset($postjson['remedioId']) ? intval($postjson['remedioId']) : null;
 
-    $sql = "INSERT INTO remedios (nome, horario) VALUES ('$nome', '$horario')";
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(["status" => "sucesso"]);
+// Validar dados obrigatórios
+if (empty($nome) || empty($horario) || !$familiaId) {
+    echo json_encode(["status" => "erro", "mensagem" => "Dados incompletos. Nome, horário e família são obrigatórios."]);
+    exit;
+}
+
+try {
+    if ($remedioId) {
+        // Modo edição
+        $stmt = $conn->prepare("UPDATE remedios SET nome = ?, horario = ? WHERE id = ? AND familiaId = ?");
+        $stmt->bind_param("ssii", $nome, $horario, $remedioId, $familiaId);
+        
+        if ($stmt->execute()) {
+            echo json_encode(["status" => "sucesso", "mensagem" => "Remédio atualizado com sucesso"]);
+        } else {
+            echo json_encode(["status" => "erro", "mensagem" => "Erro ao atualizar remédio"]);
+        }
     } else {
-        echo json_encode(["status" => "erro", "mensagem" => "Erro ao salvar."]);
+        // Modo adição
+        $stmt = $conn->prepare("INSERT INTO remedios (nome, horario, familiaId, idosoId) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssii", $nome, $horario, $familiaId, $idosoId);
+        
+        if ($stmt->execute()) {
+            echo json_encode(["status" => "sucesso", "mensagem" => "Remédio adicionado com sucesso"]);
+        } else {
+            echo json_encode(["status" => "erro", "mensagem" => "Erro ao salvar remédio"]);
+        }
     }
-
-    $conn->close();
-} else {
-    echo json_encode(["status" => "erro", "mensagem" => "Dados incompletos."]);
+} catch (Exception $e) {
+    echo json_encode(["status" => "erro", "mensagem" => "Erro ao salvar remédio"]);
 }
 ?>

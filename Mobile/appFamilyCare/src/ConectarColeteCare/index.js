@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-
+import { useUser } from '../context/UserContext';
 
 export default function ConectarColeteCare({ navigation }) {
+  const { user, currentFamily } = useUser();
 
-    const handleHomeIdoso = () => {
-        navigation.replace("HomeIdoso");
-      };
+  const handleHomeIdoso = () => {
+    navigation.replace("HomeIdoso");
+  };
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
         <Ionicons name="bluetooth" size={40} color="#2E86C1" />
         <Text style={styles.title}>Conectar ColeteCare</Text>
@@ -61,6 +61,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   header: {
     alignItems: 'center',

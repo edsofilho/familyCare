@@ -9,8 +9,11 @@ import {
   TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser } from "../context/UserContext";
 
 export default function Doencas({ navigation }) {
+  const { user, currentFamily } = useUser();
+
   const [doencas, setDoencas] = useState([
     { id: "1", nome: "Hipertensão" },
     { id: "2", nome: "Diabetes Tipo 2" },
@@ -32,7 +35,7 @@ export default function Doencas({ navigation }) {
   };
 
   const handleVoltar = () => {
-    navigation.replace("Home");
+    navigation.replace("HomeCuidador");
   };
 
   return (
@@ -54,6 +57,9 @@ export default function Doencas({ navigation }) {
             <Text style={styles.nome}>{item.nome}</Text>
           </View>
         )}
+        style={styles.listContainer}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
       />
 
       <TouchableOpacity
@@ -92,14 +98,27 @@ export default function Doencas({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 20,
     backgroundColor: "#fff",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   titulo: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   itemContainer: {
     backgroundColor: "#f1f1f1",
@@ -156,11 +175,6 @@ const styles = StyleSheet.create({
     color: "#555",
     textAlign: "center",
     fontSize: 16,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
   },
   botaoVoltar: {
     backgroundColor: "#2E86C1",

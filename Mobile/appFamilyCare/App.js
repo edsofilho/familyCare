@@ -1,76 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View, ActivityIndicator, Image } from 'react-native';                                 
+import { createStackNavigator } from '@react-navigation/stack';
+import { UserProvider } from './src/context/UserContext';
 
 import Login from './src/Login';
 import Cadastro from './src/Cadastro';
-import Home from './src/Home'
-import Informa from './src/Informa'
-import Alerta from './src/Alertas'
-import Medi from './src/Medicacao'
-import HomeIdoso from './src/HomeIdoso'
-import Doencas from './src/Doencas';
-import AlertaEnviado from './src/AlertaEnviado';
+import HomeCuidador from './src/HomeCuidador';
+import HomeIdoso from './src/HomeIdoso';
+import EntrarFamilia from './src/EntrarFamilia';
 import CadastrarIdoso from './src/CadastrarIdoso';
 import CadastroCuidador from './src/CadastroCuidador';
+import Solicitacoes from './src/Solicitacoes';
 import ConectarColeteCare from './src/ConectarColeteCare';
+import Alertas from './src/Alertas';
+import AlertaEnviado from './src/AlertaEnviado';
+import Medicacao from './src/Medicacao';
+import Tratamentos from './src/Tratamentos';
+import Doencas from './src/Doencas';
+import Historico from './src/Historico';
+import Informacoes from './src/Informacoes';
 
-const Stack = createNativeStackNavigator();
-
-function SplashScreen({ navigation }) {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    //Simula o tempo de carregamento
-    const timer = setTimeout(() => {
-      navigation.replace('Login');
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [navigation]);
-
-  return (
-    <View style={styles.container}>
-      <Image
-        source={require('./assets/logo.png')}
-        style={styles.logo} />
-    </View>
-  );
-}
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Cadastro" component={Cadastro} />
-        <Stack.Screen name="Home" component={Home}/>
-        <Stack.Screen name='Alertas' component={Alerta}/>
-        <Stack.Screen name='Informa' component={Informa}/>
-        <Stack.Screen name='Medi' component={Medi}/>
-        <Stack.Screen name='HomeIdoso' component={HomeIdoso}/>
-        <Stack.Screen name='Doencas' component={Doencas}/>
-        <Stack.Screen name='AlertaEnviado' component={AlertaEnviado}/>
-        <Stack.Screen name='CadastrarIdoso' component={CadastrarIdoso}/>
-        <Stack.Screen name='CadastroCuidador' component={CadastroCuidador}/>
-        <Stack.Screen name='ConectarColeteCare' component={ConectarColeteCare}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  )
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator 
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false
+          }}
+        >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Cadastro" component={Cadastro} />
+          <Stack.Screen name="HomeCuidador" component={HomeCuidador} />
+          <Stack.Screen name="HomeIdoso" component={HomeIdoso} />
+          <Stack.Screen name="EntrarFamilia" component={EntrarFamilia} />
+          <Stack.Screen name="CadastrarIdoso" component={CadastrarIdoso} />
+          <Stack.Screen name="CadastroCuidador" component={CadastroCuidador} />
+          <Stack.Screen name="Solicitacoes" component={Solicitacoes} />
+          <Stack.Screen name="ConectarColeteCare" component={ConectarColeteCare} />
+          <Stack.Screen name="Alertas" component={Alertas} />
+          <Stack.Screen name="AlertaEnviado" component={AlertaEnviado} />
+          <Stack.Screen name="Medicacao" component={Medicacao} />
+          <Stack.Screen name="Tratamentos" component={Tratamentos} />
+          <Stack.Screen name="Doencas" component={Doencas} />
+          <Stack.Screen name="Historico" component={Historico} />
+          <Stack.Screen name="Informacoes" component={Informacoes} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
+  );
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 250,
-    height: 250,
-  }
-});

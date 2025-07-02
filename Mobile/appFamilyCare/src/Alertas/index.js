@@ -1,65 +1,153 @@
-import React, { useState, useEffect } from "react"; // Adicionando os imports necessários
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   Alert,
-  Button,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform,
+  StatusBar,
+  ActivityIndicator
 } from "react-native";
-import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
+import { useUser } from '../context/UserContext';
+import api from '../../services/api';
 
-export default function Alerta({ navigation }) {
-  const [alertas, setAlertas] = useState([]); // Definindo o estado para os alertas
+export default function Alertas({ navigation, route }) {
+  const [alertas, setAlertas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userType = route?.params?.userType || 'cuidador';
+  const { currentFamily } = useUser();
 
   useEffect(() => {
     listarAlertas();
-  }, []); // Carrega os alertas quando o componente for montado
+  }, []);
 
   async function listarAlertas() {
     try {
-      const res = await axios.get(
-        "http://10.68.36.109/3mtec/apireact/listarAlertas.php"
-      );
-      if (res.data && res.data.alertas) {
+      if (!currentFamily || !currentFamily.id) {
+        Alert.alert('Erro', 'Família não encontrada');
+        return;
+      }
+      setLoading(true);
+      const idosoSelecionado = route?.params?.idoso;
+      const requestData = { 
+        familiaId: currentFamily.id 
+      };
+      if (idosoSelecionado && idosoSelecionado.id) {
+        requestData.idosoId = idosoSelecionado.id;
+      }
+      const res = await api.post('/listarAlertas.php', requestData);
+      if (res.data.status === 'sucesso' && res.data.alertas) {
         setAlertas(res.data.alertas);
       } else {
-        Alert.alert("Erro", "Não foi possível carregar os alertas");
+        setAlertas([]);
       }
     } catch (error) {
-      console.error("Erro ao listar alertas:", error);
-      Alert.alert("Erro", "Erro ao conectar com o servidor. Verifique sua conexão.");
+      Alert.alert('Erro', 'Erro ao conectar com o servidor. Verifique sua conexão.');
+      setAlertas([]);
+    } finally {
+      setLoading(false);
     }
   }
+
   const handleHome = () => {
-    navigation.replace("Home");
+    if (userType === 'idoso') {
+      navigation.replace('HomeIdoso');
+    } else {
+      navigation.replace('HomeCuidador');
+    }
+  };
+
+  const formatarData = (dataString) => {
+    try {
+      const data = new Date(dataString);
+      return data.toLocaleString('pt-BR');
+    } catch (error) {
+      return dataString;
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'ativo':
+        return '#D35400';
+      case 'respondido':
+        return '#27AE60';
+      case 'finalizado':
+        return '#7F8C8D';
+      default:
+        return '#2E86C1';
+    }
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#2E86C1" barStyle="light-content" />
+      
       <View style={styles.header}>
         <TouchableOpacity style={styles.botaoVoltar} onPress={handleHome}>
           <Ionicons name="arrow-back" size={20} color="#fff" />
           <Text style={styles.textoBotao}>Voltar</Text>
         </TouchableOpacity>
+        
+        <Text style={styles.titulo}>Alertas</Text>
+        
+        <TouchableOpacity style={styles.botaoAtualizar} onPress={listarAlertas}>
+          <Ionicons name="refresh" size={20} color="#fff" />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        {alertas.length > 0 ? (
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#2E86C1" />
+            <Text style={styles.loadingText}>Carregando alertas...</Text>
+          </View>
+        ) : alertas.length > 0 ? (
           alertas.map((alerta) => (
-            <View key={alerta.id} style={styles.alerta}>
-              <Text style={styles.alertaText}>Idoso: {alerta.nomeIdoso}</Text>
-              <Text style={styles.alertaText}>Tipo: {alerta.tipo}</Text>
-              <Text style={styles.alertaText}>Data: {alerta.dataQueda}</Text>
+            <View key={alerta.id} style={styles.alertaCard}>
+              <View style={styles.alertaHeader}>
+                <View style={styles.alertaInfo}>
+                  <Text style={styles.alertaIdoso}>{alerta.nomeIdoso}</Text>
+                  <Text style={styles.alertaTipo}>{alerta.tipo}</Text>
+                </View>
+                <View style={[styles.statusBadge, { backgroundColor: getStatusColor(alerta.status) }]}>
+                  <Text style={styles.statusText}>{alerta.status || 'Ativo'}</Text>
+                </View>
+              </View>
+              
+              <View style={styles.alertaDetails}>
+                <Text style={styles.alertaData}>
+                  <Ionicons name="time" size={14} color="#666" />
+                  {' '}{formatarData(alerta.dataAlerta)}
+                </Text>
+                
+                {alerta.descricao && (
+                  <Text style={styles.alertaDescricao}>{alerta.descricao}</Text>
+                )}
+                
+                {alerta.totalRespostas > 0 && (
+                  <Text style={styles.respostasText}>
+                    {alerta.totalRespostas} resposta{alerta.totalRespostas > 1 ? 's' : ''}
+                  </Text>
+                )}
+              </View>
             </View>
           ))
         ) : (
-          <Text style={styles.semAlertas}>Nenhum alerta encontrado.</Text>
+          <View style={styles.emptyContainer}>
+            <Ionicons name="checkmark-circle" size={64} color="#ccc" />
+            <Text style={styles.semAlertas}>Nenhum alerta encontrado</Text>
+            <Text style={styles.emptySubtext}>Todos os alertas foram respondidos ou não há alertas ativos</Text>
+          </View>
         )}
       </ScrollView>
-      <TouchableOpacity style={styles.botaoAtualizar} onPress={listarAlertas}><Text style={styles.textoBotao}>Atualizar</Text></TouchableOpacity>
     </View>
   );
 }
@@ -67,64 +155,140 @@ export default function Alerta({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  alerta: {
-    padding: 20,
-    marginBottom: 15,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 10,
-    width: "100%",
-  },
-  alertaText: {
-    fontSize: 16,
-    color: "#777",
-    textAlign: "center",
-    marginTop: 5,
-  },
-  semAlertas: {
-    fontSize: 18,
-    color: "#888",
-    textAlign: "center",
+    backgroundColor: "#f8f9fa",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
+    justifyContent: "space-between",
+    backgroundColor: "#2E86C1",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 50,
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  titulo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    flex: 1,
+    textAlign: 'center',
   },
   botaoVoltar: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    backgroundColor: "#2E86C1",
+    backgroundColor: 'rgba(255,255,255,0.2)',
     padding: 10,
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
+  },
+  botaoAtualizar: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    padding: 10,
+    borderRadius: 8,
   },
   textoBotao: {
     color: "#fff",
     fontSize: 16,
     marginLeft: 5,
   },
-  botaoAtualizar: {
-    flexDirection: 'row',
-    backgroundColor: '#2E86C1',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 50,
   },
-  botaoVoltar: {
-    backgroundColor: "#2E86C1",
-    padding: 10,
-    borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
+  loadingText: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 16,
   },
-
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 50,
+  },
+  semAlertas: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: "#666",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: "#999",
+    textAlign: 'center',
+  },
+  alertaCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  alertaHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  alertaInfo: {
+    flex: 1,
+  },
+  alertaIdoso: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2E86C1',
+    marginBottom: 4,
+  },
+  alertaTipo: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '600',
+  },
+  statusBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  alertaDetails: {
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    paddingTop: 12,
+  },
+  alertaData: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  alertaDescricao: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 8,
+    fontStyle: 'italic',
+  },
+  respostasText: {
+    fontSize: 12,
+    color: '#27AE60',
+    fontWeight: '600',
+  },
 });

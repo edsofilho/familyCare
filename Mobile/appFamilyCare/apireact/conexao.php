@@ -7,27 +7,24 @@ $username = 'root';
 $password = '';
 
 try {
-    // Criar conexão com o banco de dados usando PDO
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    // Criar conexão com o banco de dados usando mysqli
+    $conn = new mysqli($host, $username, $password, $dbname);
     
-    // Configurar o modo de erro do PDO para exceção
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Verificar conexão
+    if ($conn->connect_error) {
+        throw new Exception("Conexão falhou");
+    }
     
     // Configurar charset para UTF-8
-    $conn->exec("SET NAMES utf8");
-    
-    // Habilitar modo de debug
-    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-} catch(PDOException $e) {
-    // Em ambiente de produção, não exibir a mensagem de erro completa
-    error_log("Erro de conexão com o banco de dados: " . $e->getMessage());
-    die("Erro: Não foi possível conectar ao banco de dados.");
+    $conn->set_charset("utf8");
+} catch(Exception $e) {
+    throw $e;
 }
 
 // Função para fechar a conexão
 function closeConnection($conn) {
-    $conn = null;
+    if ($conn) {
+        $conn->close();
+    }
 }
 ?>

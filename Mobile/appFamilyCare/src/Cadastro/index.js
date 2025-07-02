@@ -1,52 +1,66 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
-import axios from 'axios';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
+import { MaskedTextInput } from 'react-native-mask-text';
+import { authAPI } from '../../services/api';
+import { useUser } from '../context/UserContext';
 
 export default function Cadastro({navigation}) {
+    const { login } = useUser();
+
     const [nome, setNome] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
+    const [codigoFamilia, setCodigoFamilia] = useState('');
 
     const handleCadastro = async () => {
-        if (senha !== confirmarSenha) {
-        alert('As senhas não coincidem')
-        return;
-    }
-
-    try {
-        const res = await axios.post('http://10.68.36.109/3mtec/apireact/addUsuario.php', {nome, telefone, email,senha});
-         if (res.data.sucesso) {
-            navigation.replace('Login');
-         }
-         else{
-            alert(res.data.mensagem || 'Erro ao cadastrar');
-         }
+        if (!nome || !telefone || !email || !senha) {
+            Alert.alert("Erro", "Preencha todos os campos");
+            return;
         }
-         catch (error) {
-            alert('Erro de conexão: ' + error.message);
-         }
+        try {
+            const userData = {
+                nome,
+                telefone,
+                email,
+                senha,
+                tipo: "cuidador"
+            };
+            const res = await authAPI.cadastrar(userData);
+            if (res.data.success || res.data.status === "sucesso") {
+                Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+                navigation.navigate("Login");
+            } else {
+                Alert.alert("Erro", res.data.message || res.data.mensagem || "Erro no cadastro");
+            }
+        } catch (error) {
+            Alert.alert("Erro de conexão", "Erro ao conectar com o servidor");
+        }
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.scrollContentContainer}>
             <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <Text style={styles.titulo}>Cadastro de Cuidador</Text>
+            
             <TextInput
                 style={styles.input}
-                placeholder="Nome"
+                placeholder="Nome completo"
                 value={nome}
                 onChangeText={setNome}
                 placeholderTextColor="#999"
+                autoCapitalize="words"
             />
 
-            <TextInput
+            <MaskedTextInput
                 style={styles.input}
                 placeholder="Telefone"
                 keyboardType='phone-pad'
                 value={telefone}
                 onChangeText={setTelefone}
                 placeholderTextColor="#999"
+                mask="(99) 99999-9999"
             />
 
             <TextInput
@@ -56,7 +70,9 @@ export default function Cadastro({navigation}) {
                 value={email}
                 onChangeText={setEmail}
                 placeholderTextColor="#999"
+                autoCapitalize="none"
             />
+
             <TextInput
                 style={styles.input}
                 placeholder="Senha"
@@ -65,6 +81,7 @@ export default function Cadastro({navigation}) {
                 onChangeText={setSenha}
                 placeholderTextColor="#999"
             />
+
             <TextInput
                 style={styles.input}
                 placeholder="Confirmar Senha"
@@ -74,32 +91,52 @@ export default function Cadastro({navigation}) {
                 placeholderTextColor="#999"
             />
 
+            <TextInput
+                style={styles.input}
+                placeholder="Código da família (opcional)"
+                value={codigoFamilia}
+                onChangeText={setCodigoFamilia}
+                placeholderTextColor="#999"
+                autoCapitalize="characters"
+            />
+
+            <Text style={styles.infoText}>
+                Deixe o código em branco para criar uma nova família
+            </Text>
+
             <TouchableOpacity style={styles.botao} onPress={handleCadastro}>
                 <Text style={styles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                <Text style={styles.linkLogin}>Entrar</Text>
+                <Text style={styles.linkLogin}>Já tem conta? Entrar</Text>
             </TouchableOpacity>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff'
+    },
+    scrollContentContainer: {
+        flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 30,
-        backgroundColor: '#fff'
+        paddingVertical: 40,
     },
-    text: {
+    titulo: {
         fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2E86C1',
+        marginBottom: 20,
     },
     logo: {
         width: 180,
         height: 180,
-        marginBottom: 30,
+        marginBottom: 20,
     },
     input: {
         width: '100%',
@@ -111,11 +148,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
+    infoText: {
+        fontSize: 12,
+        color: '#666',
+        textAlign: 'center',
+        marginBottom: 15,
+        fontStyle: 'italic',
+    },
     botao: {
         backgroundColor: '#2E86C1',
         width: '100%',
         height: 50,
-        borderRadius: 8,
+        borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 10,

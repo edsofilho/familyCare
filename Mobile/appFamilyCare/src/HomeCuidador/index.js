@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert
 import { Ionicons } from "@expo/vector-icons";
 import Carousel from "react-native-reanimated-carousel";
 import { useUser } from '../context/UserContext';
-import api from '../services/api';
+import api from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get("window");
@@ -28,6 +28,17 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (currentFamily && currentFamily.id) {
       carregarDados();
+    }
+  }, [currentFamily?.id]);
+
+  // Verificar alertas a cada 30 segundos
+  useEffect(() => {
+    if (currentFamily && currentFamily.id) {
+      const interval = setInterval(() => {
+        verificarAlertasTempoReal();
+      }, 30000); // 30 segundos
+
+      return () => clearInterval(interval);
     }
   }, [currentFamily?.id]);
 
@@ -105,7 +116,7 @@ export default function Home({ navigation }) {
         familiaId: currentFamily.id,
         ultimaVerificacao: ultimaVerificacao
       });
-      if (res.data.status === 'sucesso' && res.data.alertas.length > 0) {
+      if (res.data.status === 'sucesso' && res.data.alertas && res.data.alertas.length > 0) {
         setUltimaVerificacao(res.data.timestamp);
         let notifiedIds = JSON.parse(await AsyncStorage.getItem('alertasNotificados')) || [];
         const novosAlertas = res.data.alertas.filter(alerta => !notifiedIds.includes(alerta.id));
@@ -177,6 +188,10 @@ export default function Home({ navigation }) {
       return;
     }
     navigation.replace("Doencas");
+  };
+
+  const handleChat = () => {
+    navigation.navigate("Cha");
   };
 
   const handleCadastrarIdoso = () => {
@@ -394,6 +409,11 @@ export default function Home({ navigation }) {
                       ))}
                     </View>
                   )}
+                  
+                  <TouchableOpacity style={styles.chatButton} onPress={handleChat}>
+                    <Ionicons name="chatbubbles-outline" size={20} color="#fff" style={{ marginRight: 6 }} />
+                    <Text style={styles.chatText}>Chat da Família</Text>
+                  </TouchableOpacity>
                   
                   <TouchableOpacity style={styles.solicitacoesButton} onPress={() => navigation.navigate('Solicitacoes')}>
                     <Ionicons name="mail-outline" size={20} color="#fff" style={{ marginRight: 6 }} />
@@ -733,6 +753,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
+  },
+  chatButton: {
+    backgroundColor: '#4a90e2',
+    borderRadius: 12,
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  chatText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   solicitacoesButton: {
     backgroundColor: '#27AE60',

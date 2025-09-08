@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert,
 import { Ionicons } from '@expo/vector-icons';
 import { MaskedTextInput } from 'react-native-mask-text';
 import { useUser } from '../context/UserContext';
-import { idosoAPI, condicoesAPI, cuidadorAPI } from '../services/api';
+import { idosoAPI, condicoesAPI, cuidadorAPI } from '../../services/api';
 
 // Componente para seção colapsável - movido para fora para evitar re-renderizações
 const SecaoColapsavel = ({ titulo, aberta, onToggle, children }) => (
@@ -169,6 +169,10 @@ export default function CadastrarIdoso({ navigation }) {
     }
     if (formData.senha !== formData.confirmarSenha) {
       Alert.alert('Erro', 'As senhas não coincidem');
+      return;
+    }
+    if (!formData.email || !formData.email.includes('@')) {
+      Alert.alert('Erro', 'Email inválido');
       return;
     }
     if (!currentFamily) {

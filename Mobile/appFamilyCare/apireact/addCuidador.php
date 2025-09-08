@@ -33,7 +33,7 @@ try {
     
     $cuidadorId = $conn->insert_id;
     
-    $stmt = $conn->prepare("INSERT INTO familias_usuarios (usuarioId, familiaId) VALUES (?, ?)");
+    $stmt = $conn->prepare("INSERT INTO usuarios_familias (usuarioId, familiaId) VALUES (?, ?)");
     $stmt->bind_param("ii", $cuidadorId, $familiaId);
     $stmt->execute();
     

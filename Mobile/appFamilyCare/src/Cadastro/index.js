@@ -27,7 +27,7 @@ export default function Cadastro({navigation}) {
                 senha,
                 tipo: "cuidador"
             };
-            const res = await authAPI.cadastrar(userData);
+            const res = await authAPI.register(userData);
             if (res.data.success || res.data.status === "sucesso") {
                 Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
                 navigation.navigate("Login");

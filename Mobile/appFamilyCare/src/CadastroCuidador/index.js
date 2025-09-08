@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../context/UserContext';
-import { cuidadorAPI, api } from '../services/api';
+import { cuidadorAPI, api } from '../../services/api';
 
 export default function CadastroCuidador({navigation}) {
     const { user, currentFamily } = useUser();

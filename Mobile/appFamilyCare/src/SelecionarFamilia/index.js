@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useUser } from '../context/UserContext';
-import { authAPI } from '../../services/api';
+import { familiaAPI } from '../../services/api';
 
 export default function SelecionarFamilia({ navigation }) {
   const { user, currentFamily, setFamily } = useUser();
@@ -23,7 +23,7 @@ export default function SelecionarFamilia({ navigation }) {
   const carregarFamilias = async () => {
     try {
       setLoading(true);
-      const response = await authAPI.getFamilias();
+      const response = await familiaAPI.getByUser(user.id);
       if (response.data.success) {
         setFamilias(response.data.familias || []);
       } else {

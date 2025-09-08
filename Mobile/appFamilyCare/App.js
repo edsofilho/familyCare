@@ -19,6 +19,7 @@ import Tratamentos from './src/Tratamentos';
 import Doencas from './src/Doencas';
 import Historico from './src/Historico';
 import Informacoes from './src/Informacoes';
+import Chat from './src/Chat';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,7 @@ export default function App() {
           <Stack.Screen name="Doencas" component={Doencas} />
           <Stack.Screen name="Historico" component={Historico} />
           <Stack.Screen name="Informacoes" component={Informacoes} />
+          <Stack.Screen name="Chat" component={Chat} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>

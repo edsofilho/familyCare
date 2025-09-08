@@ -14,36 +14,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 include_once('conexao.php');
 
 try {
-    // Receber dados do POST
-    $input = json_decode(file_get_contents('php://input'), true);
-    $idosoId = isset($input['idosoId']) ? intval($input['idosoId']) : null;
-    
-    if (!$idosoId) {
-        echo json_encode(['status' => 'erro', 'mensagem' => 'ID do idoso não fornecido']);
-        exit;
+    // Verificar se é uma requisição GET ou POST
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // Buscar todas as condições médicas disponíveis
+        $stmt = $conn->prepare("SELECT id, nome FROM condicoes_medicas ORDER BY nome");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $condicoes = [];
+        
+        while ($row = $result->fetch_assoc()) {
+            $condicoes[] = $row;
+        }
+        
+        echo json_encode([
+            'status' => 'sucesso',
+            'condicoes' => $condicoes
+        ]);
+    } else {
+        // Receber dados do POST
+        $input = json_decode(file_get_contents('php://input'), true);
+        $idosoId = isset($input['idosoId']) ? intval($input['idosoId']) : null;
+        
+        if (!$idosoId) {
+            echo json_encode(['status' => 'erro', 'mensagem' => 'ID do idoso não fornecido']);
+            exit;
+        }
+        
+        // Buscar condições médicas do idoso específico
+        $stmt = $conn->prepare("
+            SELECT cm.nome 
+            FROM condicoes_medicas cm
+            INNER JOIN idosos_condicoes ic ON cm.id = ic.condicaoId
+            WHERE ic.idosoId = ?
+            ORDER BY cm.nome
+        ");
+        $stmt->bind_param("i", $idosoId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $condicoes = [];
+        
+        while ($row = $result->fetch_assoc()) {
+            $condicoes[] = $row['nome'];
+        }
+        
+        echo json_encode([
+            'status' => 'sucesso',
+            'condicoes' => $condicoes
+        ]);
     }
-    
-    // Buscar condições médicas do idoso específico
-    $stmt = $conn->prepare("
-        SELECT cm.nome 
-        FROM condicoes_medicas cm
-        INNER JOIN idosos_condicoes ic ON cm.id = ic.condicaoId
-        WHERE ic.idosoId = ?
-        ORDER BY cm.nome
-    ");
-    $stmt->bind_param("i", $idosoId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $condicoes = [];
-    
-    while ($row = $result->fetch_assoc()) {
-        $condicoes[] = $row['nome'];
-    }
-    
-    echo json_encode([
-        'status' => 'sucesso',
-        'condicoes' => $condicoes
-    ]);
     
 } catch (Exception $e) {
     echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao buscar condições médicas']);

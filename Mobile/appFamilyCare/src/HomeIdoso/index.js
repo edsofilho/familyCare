@@ -81,6 +81,10 @@ const HomeIdoso = ({ navigation }) => {
     }
   };
 
+  const handleChat = () => {
+    navigation.navigate("Chat");
+  };
+
   const iniciarAlerta = () => {
     if (!user) {
       Alert.alert('Erro', 'Dados do idoso não disponíveis');
@@ -140,7 +144,7 @@ const HomeIdoso = ({ navigation }) => {
       };
       const response = await api.post('/addAlerta.php', alertData);
       if (response.data.success) {
-        navigation.navigate('Informacoes', { 
+        navigation.navigate('AlertaEnviado', { 
           idoso: user, 
           userType: 'idoso' 
         });
@@ -232,6 +236,10 @@ const HomeIdoso = ({ navigation }) => {
               <TouchableOpacity style={styles.menuButton} onPress={handleMedicamentos}>
                 <Ionicons name="medkit-outline" size={24} color="#fff" />
                 <Text style={styles.menuButtonText}>Medicamentos</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menuButton} onPress={handleChat}>
+                <Ionicons name="chatbubbles-outline" size={24} color="#fff" />
+                <Text style={styles.menuButtonText}>Chat</Text>
               </TouchableOpacity>
             </View>
             
@@ -352,10 +360,10 @@ const styles = StyleSheet.create({
   menuButton: {
     backgroundColor: "#2E86C1",
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     borderRadius: 12,
     alignItems: "center",
-    minWidth: 90,
+    minWidth: 80,
     elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },

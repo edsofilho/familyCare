@@ -21,6 +21,17 @@ CREATE TABLE IF NOT EXISTS usuarios (
     criadoEm DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS recados (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  familia_id INT NOT NULL,
+  usuario VARCHAR(150) NOT NULL,
+  mensagem TEXT NOT NULL,
+  status ENUM('enviado','entregue','lido') NOT NULL DEFAULT 'enviado',
+  data_hora TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_recados_familia_id (familia_id),
+  INDEX idx_recados_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Tabela de idosos
 CREATE TABLE IF NOT EXISTS idosos (
     id INT AUTO_INCREMENT PRIMARY KEY,

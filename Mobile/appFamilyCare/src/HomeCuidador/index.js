@@ -191,7 +191,7 @@ export default function Home({ navigation }) {
   };
 
   const handleChat = () => {
-    navigation.navigate("Cha");
+    navigation.navigate("Chat");
   };
 
   const handleCadastrarIdoso = () => {

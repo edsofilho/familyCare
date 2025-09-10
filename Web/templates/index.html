@@ -1,268 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FamilyCare</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
-      crossorigin="anonymous"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FamilyCare</title>
+  <meta name="description" content="Site informativo do FamilyCare: aplicativo de ajuda no cuidado de idosos, com foco em segurança, autonomia e dignidade." />
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img src="{{ url_for('static', filename='images/logo.png') }}" class="logo-img" alt="Logo FamilyCare">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#introducao">Introdução</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="#tela1">Telas</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="#feedbacks">Feedbacks</a>
-            </li>
-          </ul>
-          <div class="d-flex align-items-center gap-2">
-            <button id="themeToggle" class="btn btn-outline-secondary btn-sm" type="button" aria-label="Alternar modo">🌙</button>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-content">
+      <a href="#" class="brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo FamilyCare" class="brand-logo">
+        <span class="brand-name">FamilyCare</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container hero-content">
+      <h1 class="hero-title">Aplicativo de Ajuda no Cuidado de Idosos</h1>
+      <p class="hero-subtitle">
+        Mais do que tecnologia: um compromisso com o bem-estar e a dignidade de quem cuidou de nós a vida toda.
+      </p>
+    </div>
+  </section>
+
+  <div class="container my-5 d-flex justify-content-center align-items-center">
+    <button class="btn btn-ghost me-3" onclick="prevItem()">&#10094;</button>
+    <div class="carrossel text-center" id="carrossel">
+      <a href="oque.html" class="item active">
+        <img src="{{ url_for('static', filename='./static/images/arduino.png') }}" alt="O que é">
+        <div class="overlay">O que é</div>
+      </a>
+
+      <a href="colete.html" class="item">
+        <img src="{{ url_for('static', filename='img/colete.jpg') }}" alt="O colete">
+        <div class="overlay">O colete</div>
+      </a>
+
+      <a href="telas.html" class="item">
+        <img src="{{ url_for('static', filename='img/aplicativo.jpg') }}" alt="O aplicativo">
+        <div class="overlay">O aplicativo</div>
+      </a>
+    </div>
+    
+    <button class="btn btn-ghost ms-3" onclick="nextItem()">&#10095;</button>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="row mt-4" id="tela1">
+        <div class="col-md-4">
+          <div class="card device-card">
+            <div class="card-body">
+              <h5 class="card-title">Tela do Cuidador</h5>
+              <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app" class="img-fluid rounded">
+            </div>
           </div>
         </div>
+        <div class="col-md-8 d-flex align-items-center">
+          <p>
+            Nesta tela o cuidador vê notificações, informações de medicamentos e doenças do idoso, além da lista de outros cuidadores conectados.
+          </p>
+        </div>
       </div>
-    </nav>
 
-    <div class="container my-5">
-      <div class="text-center mb-5">
-        <h1>Aplicativo de Ajuda no Cuidado de Idosos</h1>
-        <p class="lead">
-          Mais do que tecnologia: é um compromisso com o bem-estar e a dignidade de quem cuidou de nós a vida toda.
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <div class="card device-card">
+            <div class="card-body">
+              <h5 class="card-title">Tela de SOS</h5>
+              <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 d-flex align-items-center">
+          <p>
+            A função SOS permite ao idoso acionar ajuda rapidamente. Caso não seja cancelada em segundos, o alerta chega ao cuidador responsável.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="equipe" class="section alt">
+    <div class="container grid-2">
+      <div>
+        <h2>Quem somos nós</h2>
+        <p>
+          O FamilyCare é fruto do trabalho de Ana Luisa, Arthur e Edson, como parte do TCC. Nosso objetivo é unir tecnologia e cuidado humano para oferecer segurança e autonomia a idosos.
         </p>
       </div>
-
-      <div class="row g-3">
-
-        <div class="col-12" id="introducao">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title text-primary-emphasis">O que é?</h5>
-              <p class="card-text">FamilyCare é um aplicativo desenvolvido para oferecer mais segurança e tranquilidade a idosos e seus familiares. Seu principal objetivo é notificar cuidadores imediatamente em casos de emergência, como quedas, que representam um risco significativo à saúde na terceira idade. O app funciona em conjunto com um colete equipado com sensores de queda, que detectam movimentos bruscos. Ao identificar uma possível queda, o sistema envia alertas em tempo real para os cuidadores cadastrados, possibilitando uma resposta rápida e eficaz. Além do sensor de quedas, o aplicativo voltado para o idoso conta com um botão de SOS, que pode ser acionado manualmente em qualquer situação de urgência, oferecendo mais autonomia e segurança.
-                </p>
-            </div>
-          </div>
+      <div>
+        <div class="team-grid">
+          <figure class="team-member">
+            <img src="{{ url_for('static', filename='images/nardes.jpeg') }}" alt="Ana Luisa" />
+            <figcaption>
+              <a class="github-link" href="https://github.com/anardes" target="_blank">Ana Luisa</a>
+            </figcaption>
+          </figure>
+          <figure class="team-member">
+            <img src="{{ url_for('static', filename='images/arthur.jpeg') }}" alt="Arthur" />
+            <figcaption>
+              <a class="github-link" href="https://github.com/OThurzn" target="_blank">Arthur Thomas</a>
+            </figcaption>
+          </figure>
+          <figure class="team-member">
+            <img src="{{ url_for('static', filename='images/edson.jpeg') }}" alt="Edson" />
+            <figcaption>
+              <a class="github-link" href="https://github.com/edsofilho" target="_blank">Edson Filho</a>
+            </figcaption>
+          </figure>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="row align-items-start mt-5">
-          <div class="col-md-6 text-center">
-            <img src="{{ url_for('static', filename='images/idoso.png') }}" alt="Imagem de idoso" class="img-fluid rounded" style="max-width: 70%;">
-          </div>
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="year"></span> FamilyCare — Projeto acadêmico</p>
+      <nav class="footer-nav">
+        <a href="#inicio">Início</a>
+        <a href="#oque">O que é?</a>
+        <a href="#equipe">Quem somos</a>
+      </nav>
+    </div>
+  </footer>
 
-          <div class="col-md-6">
-            <div class="card shadow">
-              <div class="card-body">
-                <h5 class="card-title text-primary-emphasis">Por que o FamilyCare é essencial?</h5>
-                <p class="card-text">As quedas são uma das principais causas de acidentes com idosos, podendo resultar em fraturas, perda de mobilidade, internações e redução da autonomia. Cerca de 30% dos idosos caem ao menos uma vez por ano, muitas vezes dentro de casa. Nesse contexto, o tempo de resposta é crucial. O FamilyCare oferece uma solução eficaz ao detectar automaticamente quedas e acionar imediatamente cuidadores e serviços de emergência, garantindo segurança, agilidade no socorro e tranquilidade para idosos e seus familiares.
-                </p>
-              </div>
-            </div>
-          </div>
-
-        <div class="col-md-6 mt-5">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title text-primary-emphasis">O colete:</h5>
-              <p class="card-text">Desenvolvemos um equipamento tecnológico acoplado a um colete confortável, ideal para o uso diário do idoso. Com sensores inteligentes, o dispositivo detecta quedas bruscas em tempo real e aciona automaticamente cuidadores e serviços de emergência cadastrados. Seu principal objetivo é garantir uma resposta rápida em situações em que o idoso não consegue pedir ajuda, promovendo mais segurança, autonomia e tranquilidade para ele e sua rede de apoio.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-4 mt-5 text-end">
-          <img src="{{ url_for('static', filename='images/arduino.png') }}" alt="Imagem do Arduino" class="img-fluid rounded" style="max-width: 90%;">
-        </div>
-
-        
-        <div class="row mt-4" id="tela1">
-          <div class="col-md-4 text-center">
-            <div class="card shadow">
-              <div class="card-body">
-                <h5 class="card-title text-primary-emphasis">Tela do Cuidador</h5>
-                <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app"
-                    class="img-fluid rounded"
-                    style="width: 50%; height: auto;">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-7 d-flex align-items-center">
-            <div>
-              <h5>Descrição:</h5>
-              <p>
-                Neste exemplo de tela do cuidador, aparece um card indicando que há notificação do idoso Cláudio, mostradno botões para acessar as informações, os medicamentos e as doenças dele. Mais à baixo aparecem outros cuidadores do idosoe um botão de saída para retornar ao login.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-4">
-          <div class="col-md-4 text-center">
-            <div class="card shadow">
-              <div class="card-body">
-                <h5 class="card-title text-primary-emphasis">Tela de SOS</h5>
-                <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app"
-                    class="img-fluid rounded"
-                    style="width: 50%; height: auto;">
-              </div>
-            </div>
-          </div>
-          <div class="col-md-7 d-flex align-items-center">
-            <div>
-              <h5>Descrição:</h5>
-              <p>
-                Esta tela representa a funcionalidade de SOS no aplicativo do idoso, após o clique aparece uma tela de cancelamento caso toque por engano, se não for cancelado, um alerta será enviado ao cuidador.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 mt-5">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title text-primary-emphasis">Quem somos nós</h5>
-              <p class="card-text">
-                Somos estudantes e desenvolvedores dedicados à criação de soluções tecnológicas que promovem o bem-estar de idosos e o apoio aos seus cuidadores. Nosso objetivo é unir conhecimento e empatia para transformar cuidado em segurança e dignidade.
-              </p>
-              <div class="row text-center mt-4">
-                <div class="col-md-4 mb-3">
-                  <img src="{{ url_for('static', filename='images/edson.jpeg') }}" alt="Membro 1" class="img-fluid rounded" style="max-width: 80%;">
-                  <p class="mt-2">Edson</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <img src="{{ url_for('static', filename='images/arthur.jpeg') }}" alt="Membro 2" class="img-fluid rounded" style="max-width: 80%;">
-                  <p class="mt-2">Arthur</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                  <img src="{{ url_for('static', filename='images/nardes.jpeg') }}" alt="Membro 3" class="img-fluid rounded" style="max-width: 83%;">
-                  <p class="mt-2">Ana Nardes</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-          
-        <div class="mt-5" id="feedbacks">
-          <div class="row g-4">
-            <div class="col-lg-6">
-              <div class="card shadow h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Envie seu feedback</h5>
-                  <p class="text-muted small mb-4">Sua opinião nos ajuda a melhorar a experiência do FamilyCare.</p>
-                  <form method="POST" class="feedback-form">
-                    <div class="mb-3">
-                      <label for="nome" class="form-label">Nome</label>
-                      <input id="nome" type="text" name="nome" placeholder="Seu nome" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="email" class="form-label">E-mail</label>
-                      <input id="email" type="email" name="email" placeholder="Seu e-mail" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="assunto" class="form-label">Assunto</label>
-                      <input id="assunto" type="text" name="assunto" placeholder="Assunto" class="form-control">
-                    </div>
-                    <div class="mb-4">
-                      <label for="mensagem" class="form-label">Mensagem</label>
-                      <textarea id="mensagem" name="mensagem" rows="4" placeholder="Escreva aqui seu feedback..." class="form-control" required></textarea>
-                    </div>
-                    <div class="d-flex gap-2">
-                      <button type="submit" class="btn btn-success">Enviar</button>
-                      <button type="reset" class="btn btn-danger">Limpar</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <div class="card shadow h-100">
-                <div class="card-body">
-                  <h5 class="card-title">Feedbacks recebidos</h5>
-                  <div class="table-responsive">
-                    <table class="table table-hover align-middle" id="feedback">
-                      <thead>
-                        <tr>
-                          <th>Nome</th>
-                          <th>E-mail</th>
-                          <th>Assunto</th>
-                          <th>Mensagem</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for f in feedbacks %}
-                        <tr>
-                          <td>{{ f.nome }}</td>
-                          <td>{{ f.email }}</td>
-                          <td>{{ f.assunto }}</td>
-                          <td>{{ f.mensagem }}</td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-    <footer class="rodape">
-      <p> © Direitos reservados, feito por
-        <div class="d-flex gap-2 justify-content-center flex-wrap">
-          <a href="https://github.com/edsofilho" style="color: #4b9139">Edson</a>,
-          <a href="https://github.com/OThurzn" style="color: #2f7cd4;">Arthur</a> &
-          <a href="https://github.com/anardes" style="color: rgb(221, 63, 169);">Ana Nardes</a>
-        </div>
-      </p>
-
-    </footer>
-
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      (function() {
-        var root = document.documentElement;
-        var stored = localStorage.getItem('theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        function setTheme(theme) {
-          if (theme === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
-          localStorage.setItem('theme', theme);
-          var btn = document.getElementById('themeToggle');
-          if (btn) btn.textContent = root.classList.contains('dark') ? '☀️' : '🌙';
-        }
-        setTheme(stored || (prefersDark ? 'dark' : 'light'));
-        window.addEventListener('DOMContentLoaded', function() {
-          var btn = document.getElementById('themeToggle');
-          if (!btn) return;
-          btn.addEventListener('click', function() {
-            setTheme(root.classList.contains('dark') ? 'light' : 'dark');
-          });
-        });
-      })();
-    </script>
-  </body>
+  <script src="./static/script.js"></script>
+</body>
 </html>

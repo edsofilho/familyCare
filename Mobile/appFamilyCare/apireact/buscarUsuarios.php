@@ -26,17 +26,24 @@ if (empty($termo) || !$usuarioAtual) {
 
 try {
     // Buscar usuários que contenham o termo no nome ou email
+    // Excluir usuários que já estão na mesma família do usuário atual
     $stmt = $conn->prepare("
-        SELECT id, nome, email, telefone
-        FROM usuarios 
-        WHERE (nome LIKE ? OR email LIKE ?)
-        AND id != ?
-        ORDER BY nome
+        SELECT DISTINCT u.id, u.nome, u.email, u.telefone
+        FROM usuarios u
+        WHERE (u.nome LIKE ? OR u.email LIKE ?)
+        AND u.id != ?
+        AND u.id NOT IN (
+            SELECT uf2.usuarioId 
+            FROM usuarios_familias uf1
+            INNER JOIN usuarios_familias uf2 ON uf1.familiaId = uf2.familiaId
+            WHERE uf1.usuarioId = ?
+        )
+        ORDER BY u.nome
         LIMIT 20
     ");
     
     $termoBusca = "%{$termo}%";
-    $stmt->bind_param("ssi", $termoBusca, $termoBusca, $usuarioAtual);
+    $stmt->bind_param("ssii", $termoBusca, $termoBusca, $usuarioAtual, $usuarioAtual);
     $stmt->execute();
     
     $result = $stmt->get_result();
@@ -50,7 +57,7 @@ try {
 } catch (Exception $e) {
     echo json_encode([
         'status' => 'erro', 
-        'mensagem' => 'Erro ao buscar usuários'
+        'mensagem' => 'Erro ao buscar usuários: ' . $e->getMessage()
     ]);
 }
 ?> 

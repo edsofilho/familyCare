@@ -31,17 +31,30 @@ export default function CadastroCuidador({navigation}) {
             Alert.alert('Erro', 'Usuário não encontrado');
             return;
         }
+        if (!currentFamily?.id) {
+            Alert.alert('Erro', 'Nenhuma família selecionada');
+            return;
+        }
+        
         setBuscando(true);
+        setUsuarios([]); // Limpar resultados anteriores
+        
         try {
             const res = await cuidadorAPI.search(termoBusca.trim(), user.id);
             if (res.data.status === 'sucesso') {
                 const usuariosEncontrados = res.data.usuarios || [];
                 setUsuarios(usuariosEncontrados);
+                
+                if (usuariosEncontrados.length === 0) {
+                    Alert.alert('Nenhum resultado', 'Nenhum usuário encontrado com esse nome ou email');
+                }
             } else {
-                Alert.alert('Erro', res.data.mensagem);
+                Alert.alert('Erro', res.data.mensagem || 'Erro ao buscar usuários');
             }
         } catch (error) {
-            Alert.alert('Erro', 'Erro ao buscar usuários: ' + (error.response?.data?.mensagem || error.message));
+            console.log('Erro completo:', error);
+            const errorMessage = error.response?.data?.mensagem || error.message || 'Erro de conexão';
+            Alert.alert('Erro', 'Erro ao buscar usuários: ' + errorMessage);
         } finally {
             setBuscando(false);
         }
@@ -60,25 +73,35 @@ export default function CadastroCuidador({navigation}) {
             Alert.alert('Erro', 'Cuidador inválido');
             return;
         }
+        
         const familiaId = currentFamily.id;
         const usuarioId = user.id;
         const cuidadorId = cuidador.id;
+        
         setLoading(true);
         try {
             const res = await cuidadorAPI.sendInvite(familiaId, usuarioId, cuidadorId);
             if (res.data.status === 'sucesso') {
-                Alert.alert('Sucesso', 'Convite enviado com sucesso!');
-                setUsuarios([]);
-                setTermoBusca('');
+                Alert.alert(
+                    'Sucesso', 
+                    res.data.mensagem || 'Convite enviado com sucesso!',
+                    [
+                        {
+                            text: 'OK',
+                            onPress: () => {
+                                setUsuarios([]);
+                                setTermoBusca('');
+                            }
+                        }
+                    ]
+                );
             } else {
-                Alert.alert('Erro', res.data.mensagem);
+                Alert.alert('Erro', res.data.mensagem || 'Erro ao enviar convite');
             }
         } catch (error) {
-            if (error.response) {
-                Alert.alert('Erro', 'Erro ao enviar convite: ' + JSON.stringify(error.response.data));
-            } else {
-                Alert.alert('Erro', 'Erro ao enviar convite: ' + error.message);
-            }
+            console.log('Erro ao enviar convite:', error);
+            const errorMessage = error.response?.data?.mensagem || error.message || 'Erro de conexão';
+            Alert.alert('Erro', 'Erro ao enviar convite: ' + errorMessage);
         } finally {
             setLoading(false);
         }

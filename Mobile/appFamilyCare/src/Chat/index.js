@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useUser } from "../context/UserContext";
 import api from "../services/api";
-
+import { Ionicons } from '@expo/vector-icons';
 const EMOJIS_POSSIVEIS = ["👴", "👵", "👨‍⚕️", "👩‍⚕️", "👨‍👩‍👧‍👦", "💊", "🏥", "❤️", "🤗", "👋"];
 const EMOJI_PADRAO = "👤";
 
@@ -126,6 +126,12 @@ export default function Chat({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.botaoVoltar}
+          onPress={() => navigation.navigate(user.tipo === 'cuidador' ? 'HomeCuidador' : 'HomeIdoso')}
+        >
+          <Ionicons name="arrow-back-outline" size={24} color="#fff" ></Ionicons>
+        </TouchableOpacity>
         <Text style={styles.titulo}>💬 Chat da Família</Text>
         <Text style={styles.subtitulo}>{currentFamily.nome}</Text>
       </View>
@@ -224,6 +230,22 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     marginBottom: 10,
+    position: 'relative',
+  },
+  botaoVoltar: {
+    position: 'absolute',
+    top: 15,
+    left: 15,
+    zIndex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 15,
+  },
+  botaoVoltarTexto: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   titulo: {
     fontSize: 20,

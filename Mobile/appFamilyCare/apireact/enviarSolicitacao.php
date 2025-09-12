@@ -32,6 +32,7 @@ if (!$familiaId || !$usuarioId || !$cuidadorId) {
 }
 
 try {
+    // Verificar se já existe solicitação pendente
     $stmt = $conn->prepare("
         SELECT id FROM solicitacoes_familia 
         WHERE familiaId = ? 
@@ -48,6 +49,8 @@ try {
         ]);
         exit;
     }
+    
+    // Verificar se o cuidador já está na família
     $stmt = $conn->prepare("
         SELECT id FROM usuarios_familias 
         WHERE familiaId = ? 
@@ -63,24 +66,44 @@ try {
         ]);
         exit;
     }
+    
+    // Verificar se o usuário que está enviando pertence à família
+    $stmt = $conn->prepare("
+        SELECT id FROM usuarios_familias 
+        WHERE familiaId = ? 
+        AND usuarioId = ?
+    ");
+    $stmt->bind_param("ii", $familiaId, $usuarioId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if (!$result->fetch_assoc()) {
+        echo json_encode([
+            'status' => 'erro',
+            'mensagem' => 'Você não pertence a esta família'
+        ]);
+        exit;
+    }
+    
+    // Inserir solicitação
     $stmt = $conn->prepare("
         INSERT INTO solicitacoes_familia (familiaId, usuarioId, cuidadorId, status, criadoEm) 
         VALUES (?, ?, ?, 'pendente', NOW())
     ");
     $stmt->bind_param("iii", $familiaId, $usuarioId, $cuidadorId);
     if (!$stmt->execute()) {
-        throw new Exception("Erro ao inserir solicitação");
+        throw new Exception("Erro ao inserir solicitação: " . $stmt->error);
     }
     $idInserido = $conn->insert_id;
+    
     echo json_encode([
         'status' => 'sucesso',
-        'mensagem' => 'Solicitação enviada com sucesso',
+        'mensagem' => 'Convite enviado com sucesso! O cuidador receberá uma notificação.',
         'id' => $idInserido
     ]);
 } catch (Exception $e) {
     echo json_encode([
         'status' => 'erro', 
-        'mensagem' => 'Erro ao enviar solicitação'
+        'mensagem' => 'Erro ao enviar solicitação: ' . $e->getMessage()
     ]);
 }
 ?> 

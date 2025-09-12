@@ -237,7 +237,7 @@ export default function Medicacao({ navigation, route }) {
                     style={[styles.actionButton, styles.deleteButton]} 
                     onPress={() => handleDelete(medicamento)}
                   >
-                    <Ionicons name="trash" size={16} color="#e74c3c" />
+                    <Ionicons name="trash" size={16} color="#fff" />
                   </TouchableOpacity>
                 </View>
               </View>

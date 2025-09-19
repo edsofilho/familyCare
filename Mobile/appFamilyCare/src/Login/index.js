@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useUser } from '../context/UserContext';
 import { authAPI } from '../../services/api';
+import notificationService from '../services/notificationService';
 
 export default function Login({ navigation }) {
   const userContext = useUser();
@@ -51,6 +52,17 @@ export default function Login({ navigation }) {
             const familia = res.data.familia || res.data.user?.familia;
             userContext.setFamily(familia);
           }
+          
+          // Registrar token de notificação após login bem-sucedido
+          try {
+            const token = await notificationService.registerForPushNotificationsAsync();
+            if (token) {
+              await notificationService.sendTokenToServer(userData.id, userData.tipo);
+            }
+          } catch (error) {
+            console.error('Erro ao registrar notificações:', error);
+          }
+          
           Alert.alert("Bem-Vindo", `Olá, ${userData.nome}`);
           if (userData.tipo === "idoso") {
             const idosoData = {

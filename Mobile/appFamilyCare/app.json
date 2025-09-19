@@ -23,6 +23,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#2E86C1",
+      "androidMode": "default",
+      "androidCollapsedTitle": "FamilyCare"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#2E86C1",
+          "defaultChannel": "default"
+        }
+      ]
+    ]
   }
 }

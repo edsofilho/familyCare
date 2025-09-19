@@ -62,7 +62,7 @@ try {
         
         // Buscar cuidadores da família do idoso
         $cuidadores_stmt = $conn->prepare("
-            SELECT DISTINCT u.id, u.nome, u.email, u.telefone 
+            SELECT DISTINCT u.id, u.nome, u.email, u.telefone, uf.familiaId
             FROM usuarios u 
             JOIN usuarios_familias uf ON u.id = uf.usuarioId 
             JOIN familias_idosos fi ON uf.familiaId = fi.familiaId 
@@ -72,8 +72,16 @@ try {
         $cuidadores_stmt->execute();
         $cuidadores_result = $cuidadores_stmt->get_result();
         $cuidadores = [];
+        $familiaId = null;
         while ($cuidador = $cuidadores_result->fetch_assoc()) {
             $cuidadores[] = $cuidador;
+            $familiaId = $cuidador['familiaId']; // Pegar o ID da família
+        }
+        
+        // Enviar notificação push para os cuidadores
+        $pushSent = false;
+        if ($familiaId && !empty($cuidadores)) {
+            $pushSent = sendPushNotification($familiaId, $idoso['nome'], $tipo_alerta, $alerta_id);
         }
         
         $response = [
@@ -88,6 +96,7 @@ try {
                 'status' => 'ativo'
             ],
             'cuidadores_notificados' => count($cuidadores),
+            'push_notification_sent' => $pushSent,
             'cuidadores' => $cuidadores
         ];
         
@@ -99,5 +108,46 @@ try {
 } catch (Exception $e) {
     error_log("EXCEÇÃO: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Erro interno ao inserir alerta']);
+}
+
+// Função para enviar notificação push
+function sendPushNotification($familiaId, $nomeIdoso, $tipoAlerta, $alertaId) {
+    try {
+        $title = "🚨 Alerta de {$nomeIdoso}";
+        $body = "Tipo: {$tipoAlerta}\nData: " . date('d/m/Y H:i');
+        
+        $data = [
+            'familiaId' => $familiaId,
+            'title' => $title,
+            'body' => $body,
+            'data' => [
+                'alertaId' => $alertaId,
+                'tipo' => 'alerta',
+                'idoso' => $nomeIdoso
+            ]
+        ];
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/apireact/sendPushNotification.php');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($httpCode === 200) {
+            $responseData = json_decode($response, true);
+            return $responseData['success'] ?? false;
+        }
+        
+        return false;
+    } catch (Exception $e) {
+        error_log("Erro ao enviar push notification: " . $e->getMessage());
+        return false;
+    }
 }
 ?>

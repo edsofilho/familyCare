@@ -5,6 +5,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { useUser } from '../context/UserContext';
 import api from '../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import notificationService from '../services/notificationService';
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,6 +29,8 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (currentFamily && currentFamily.id) {
       carregarDados();
+      // Registrar para notificações push
+      registerForNotifications();
     }
   }, [currentFamily?.id]);
 
@@ -41,6 +44,22 @@ export default function Home({ navigation }) {
       return () => clearInterval(interval);
     }
   }, [currentFamily?.id]);
+
+  // Configurar listener para notificações
+  useEffect(() => {
+    const subscription = notificationService.addNotificationResponseReceivedListener(response => {
+      const data = response.notification.request.content.data;
+      
+      if (data.tipo === 'alerta') {
+        // Navegar para a tela de alertas quando o usuário toca na notificação
+        handleAlertas();
+      }
+    });
+
+    return () => {
+      notificationService.removeNotificationSubscription(subscription);
+    };
+  }, []);
 
   // Carregar índice salvo quando o componente monta
   useEffect(() => {
@@ -77,6 +96,27 @@ export default function Home({ navigation }) {
       }
     } catch (error) {
       // Erro ao salvar índice
+    }
+  };
+
+  const registerForNotifications = async () => {
+    try {
+      // Verificar se já temos token salvo
+      const storedToken = await notificationService.getStoredToken();
+      
+      if (!storedToken) {
+        // Registrar para notificações push
+        const token = await notificationService.registerForPushNotificationsAsync();
+        if (token && user) {
+          // Enviar token para o servidor
+          await notificationService.sendTokenToServer(user.id, 'cuidador');
+        }
+      } else if (user) {
+        // Se já temos token, apenas enviar para o servidor
+        await notificationService.sendTokenToServer(user.id, 'cuidador');
+      }
+    } catch (error) {
+      console.error('Erro ao registrar notificações:', error);
     }
   };
 
@@ -124,15 +164,18 @@ export default function Home({ navigation }) {
           setAlertasRecentes(novosAlertas);
           notifiedIds = [...notifiedIds, ...novosAlertas.map(a => a.id)];
           await AsyncStorage.setItem('alertasNotificados', JSON.stringify(notifiedIds));
+          
+          // Mostrar notificações push em vez de Alert.alert
           novosAlertas.forEach(alerta => {
-            Alert.alert(
-              `🚨 Alerta de ${alerta.nomeIdoso}`,
-              `Tipo: ${alerta.tipo}\nData: ${new Date(alerta.dataAlerta).toLocaleString('pt-BR')}`,
-              [
-                { text: 'Ver Alertas', onPress: () => handleAlertas() },
-                { text: 'OK', style: 'cancel' }
-              ]
-            );
+            const titulo = `🚨 Alerta de ${alerta.nomeIdoso}`;
+            const corpo = `Tipo: ${alerta.tipo}\nData: ${new Date(alerta.dataAlerta).toLocaleString('pt-BR')}`;
+            
+            // Mostrar notificação local
+            notificationService.showLocalNotification(titulo, corpo, {
+              alertaId: alerta.id,
+              idosoId: alerta.idosoId,
+              tipo: 'alerta'
+            });
           });
         }
       }

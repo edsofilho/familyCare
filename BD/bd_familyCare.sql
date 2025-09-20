@@ -51,6 +51,15 @@ CREATE TABLE IF NOT EXISTS idosos (
     FOREIGN KEY (cuidadorId) REFERENCES usuarios(id) ON DELETE SET NULL
 );
 
+-- Tabela de dispositivos
+CREATE TABLE IF NOT EXISTS dispositivos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numeroSerie VARCHAR(100) UNIQUE NOT NULL,
+    idosoId INT NOT NULL,
+    criadoEm DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idosoId) REFERENCES idosos(id) ON DELETE CASCADE
+);
+
 -- Tabela de famílias
 CREATE TABLE IF NOT EXISTS familias (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,14 +126,12 @@ CREATE TABLE IF NOT EXISTS remedios (
 -- TABELAS DE ALERTAS
 -- =====================================================
 
--- Tabela de alertas com localização e data
+-- Tabela de alertas
 CREATE TABLE IF NOT EXISTS alertas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     idosoId INT NOT NULL,
-    tipo VARCHAR(50),
+    tipo ENUM('automatico', 'manual', 'virtual') NOT NULL,
     dataAlerta DATETIME DEFAULT CURRENT_TIMESTAMP,
-    latitude DECIMAL(9,6),
-    longitude DECIMAL(9,6),
     status ENUM('ativo', 'respondido', 'resolvido') DEFAULT 'ativo',
     FOREIGN KEY (idosoId) REFERENCES idosos(id) ON DELETE CASCADE
 );
@@ -374,7 +381,7 @@ INSERT INTO remedios (nome, horario, familiaId, idosoId) VALUES
 ('Diazepam', '14:00:00', 3, 7),
 ('Levodopa', '08:00:00', 3, 8),
 ('Levodopa', '14:00:00', 3, 8),
-('Levodopa', '20:00:00', 3, 8),
+('Levodopa', '20:00:00', 3, 8), 
 
 -- Família Costa
 ('Furosemida', '08:00:00', 4, 9),
@@ -388,31 +395,32 @@ INSERT INTO remedios (nome, horario, familiaId, idosoId) VALUES
 ('Zolpidem', '22:00:00', 5, 12);
 
 -- =====================================================
--- DADOS DE EXEMPLO - ALERTAS
+-- DADOS DE EXEMPLO - ALERTAS (SEM latitude/longitude)
+-- tipo agora é ENUM('automatico','manual','virtual')
 -- =====================================================
 
-INSERT INTO alertas (idosoId, tipo, latitude, longitude) VALUES 
+INSERT INTO alertas (idosoId, tipo) VALUES 
 -- Família Silva
-(1, 'Queda', -23.5505, -46.6333),
-(2, 'SOS', -23.5505, -46.6333),
-(3, 'Queda', -23.5510, -46.6340),
-(4, 'SOS', -23.5520, -46.6350),
+(1, 'automatico'),
+(2, 'manual'),
+(3, 'automatico'),
+(4, 'manual'),
 
 -- Família Santos
-(5, 'Queda', -23.5530, -46.6360),
-(6, 'SOS', -23.5540, -46.6370),
+(5, 'automatico'),
+(6, 'manual'),
 
 -- Família Oliveira
-(7, 'Queda', -23.5550, -46.6380),
-(8, 'SOS', -23.5560, -46.6390),
+(7, 'automatico'),
+(8, 'manual'),
 
 -- Família Costa
-(9, 'Queda', -23.5570, -46.6400),
-(10, 'SOS', -23.5580, -46.6410),
+(9, 'automatico'),
+(10, 'manual'),
 
 -- Família Pereira
-(11, 'Queda', -23.5590, -46.6420),
-(12, 'SOS', -23.5600, -46.6430);
+(11, 'automatico'),
+(12, 'manual');
 
 -- Atualizar alertas existentes para status 'ativo'
 UPDATE alertas SET status = 'ativo' WHERE status IS NULL;

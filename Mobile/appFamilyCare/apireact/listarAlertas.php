@@ -33,10 +33,13 @@ try {
         $stmt = $conn->prepare("
             SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
                    (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
-                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao
+                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao,
+                   q.intensidade as quedaIntensidade, q.latitude as quedaLatitude, q.longitude as quedaLongitude,
+                   q.dataQueda, q.codigoColete, q.status as statusQueda
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
+            LEFT JOIN quedas q ON a.quedaId = q.id
             WHERE fi.familiaId = ? AND i.id = ?
             ORDER BY a.dataAlerta DESC
             LIMIT 50
@@ -47,10 +50,13 @@ try {
         $stmt = $conn->prepare("
             SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
                    (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
-                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao
+                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao,
+                   q.intensidade as quedaIntensidade, q.latitude as quedaLatitude, q.longitude as quedaLongitude,
+                   q.dataQueda, q.codigoColete, q.status as statusQueda
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
+            LEFT JOIN quedas q ON a.quedaId = q.id
             WHERE fi.familiaId = ?
             ORDER BY a.dataAlerta DESC
             LIMIT 50

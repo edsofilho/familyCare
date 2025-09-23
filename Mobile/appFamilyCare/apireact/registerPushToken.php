@@ -56,3 +56,4 @@ try {
     echo json_encode(['success' => false, 'message' => 'Erro interno do servidor']);
 }
 ?>
+

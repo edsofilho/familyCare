@@ -26,10 +26,13 @@ if (!$familiaId) {
 try {
     // Buscar alertas novos da família (últimos 5 minutos por padrão)
     $sql = "
-        SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone, i.telefone as telefoneIdoso
+        SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone, i.telefone as telefoneIdoso,
+               q.intensidade as quedaIntensidade, q.latitude as quedaLatitude, q.longitude as quedaLongitude,
+               q.dataQueda, q.codigoColete
         FROM alertas a
         INNER JOIN idosos i ON a.idosoId = i.id
         INNER JOIN familias_idosos fi ON i.id = fi.idosoId
+        LEFT JOIN quedas q ON a.quedaId = q.id
         WHERE fi.familiaId = ?
     ";
     

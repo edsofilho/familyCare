@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS push_tokens (
     INDEX idx_pushToken (pushToken(100)),
     UNIQUE KEY unique_user_token (userId, userType, pushToken(100))
 );
+

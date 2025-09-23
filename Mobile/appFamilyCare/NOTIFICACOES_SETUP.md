@@ -119,3 +119,4 @@ curl_setopt($ch, CURLOPT_URL, 'http://SEU_DOMINIO/apireact/sendPushNotification.
 ## Conclusão
 
 O sistema de notificações push está completamente implementado e funcional. Os cuidadores agora recebem notificações push em tempo real quando alertas são enviados pelos idosos, proporcionando uma experiência muito melhor do que os alerts popup anteriores.
+

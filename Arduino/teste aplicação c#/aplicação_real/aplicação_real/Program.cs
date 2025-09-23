@@ -9,7 +9,7 @@ namespace FamilyCareSerial
         static void Main(string[] args)
         {
             // Configura a porta serial
-            SerialPort porta = new SerialPort("COM3", 9600); // Ajuste o COM e baudrate
+            SerialPort porta = new SerialPort("COM9", 9600); // Ajuste o COM e baudrate
             porta.DataReceived += Porta_DataReceived;
 
             try

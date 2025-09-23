@@ -452,6 +452,26 @@ INSERT INTO alertas_respostas (alertaId, cuidadorId, acao, observacao) VALUES
 (11, 14, 'respondido', 'Verificação concluída'),
 (12, 15, 'em_andamento', 'Em atendimento médico');
 
+
+-- =====================================================
+-- DADOS DE EXEMPLO - DISPOSITIVOS VINCULADOS
+-- =====================================================
+
+INSERT INTO dispositivos (numeroSerie, idosoId) VALUES
+('DISP001', 1),
+('DISP002', 2),
+('DISP003', 3),
+('DISP004', 4),
+('DISP005', 5),
+('DISP006', 6),
+('DISP007', 7),
+('DISP008', 8),
+('DISP009', 9),
+('DISP010', 10),
+('DISP011', 11),
+('DISP012', 12);
+
+
 -- =====================================================
 -- FIM DO SCRIPT
 -- =====================================================

@@ -394,16 +394,12 @@ INSERT INTO remedios (nome, horario, familiaId, idosoId) VALUES
 ('Memantina', '12:00:00', 5, 12),
 ('Zolpidem', '22:00:00', 5, 12);
 
--- =====================================================
--- DADOS DE EXEMPLO - ALERTAS (SEM latitude/longitude)
--- tipo agora é ENUM('automatico','manual','virtual')
--- =====================================================
 
 INSERT INTO alertas (idosoId, tipo) VALUES 
 -- Família Silva
 (1, 'automatico'),
 (2, 'manual'),
-(3, 'automatico'),
+(3, 'virtual'),
 (4, 'manual'),
 
 -- Família Santos
@@ -411,16 +407,16 @@ INSERT INTO alertas (idosoId, tipo) VALUES
 (6, 'manual'),
 
 -- Família Oliveira
-(7, 'automatico'),
+(7, 'virtual'),
 (8, 'manual'),
 
 -- Família Costa
 (9, 'automatico'),
-(10, 'manual'),
+(10, 'virtual'),
 
 -- Família Pereira
-(11, 'automatico'),
-(12, 'manual');
+(11, 'virtual'),
+(12, 'virtual');
 
 -- Atualizar alertas existentes para status 'ativo'
 UPDATE alertas SET status = 'ativo' WHERE status IS NULL;

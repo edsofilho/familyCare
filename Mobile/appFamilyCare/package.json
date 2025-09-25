@@ -23,7 +23,6 @@
     "expo-checkbox": "~5.0.7",
     "expo-device": "~8.0.8",
     "expo-linking": "~8.0.8",
-    "expo-notifications": "^0.32.11",
     "expo-status-bar": "~3.0.8",
     "firebase": "^11.6.1",
     "node": "^24.8.0",
@@ -51,7 +50,9 @@
     "doctor": {
       "reactNativeDirectoryCheck": {
         "listUnknownPackages": false,
-        "exclude": ["@react-native-community/checkbox"]
+        "exclude": [
+          "@react-native-community/checkbox"
+        ]
       }
     }
   }

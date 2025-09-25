@@ -53,16 +53,6 @@ export default function Login({ navigation }) {
             userContext.setFamily(familia);
           }
           
-          // Registrar token de notificação após login bem-sucedido
-          try {
-            const token = await notificationService.registerForPushNotificationsAsync();
-            if (token) {
-              await notificationService.sendTokenToServer(userData.id, userData.tipo);
-            }
-          } catch (error) {
-            console.error('Erro ao registrar notificações:', error);
-          }
-          
           Alert.alert("Bem-Vindo", `Olá, ${userData.nome}`);
           if (userData.tipo === "idoso") {
             const idosoData = {

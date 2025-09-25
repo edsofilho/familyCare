@@ -29,8 +29,6 @@ export default function Home({ navigation }) {
   useEffect(() => {
     if (currentFamily && currentFamily.id) {
       carregarDados();
-      // Registrar para notificações push
-      registerForNotifications();
     }
   }, [currentFamily?.id]);
 
@@ -99,25 +97,9 @@ export default function Home({ navigation }) {
     }
   };
 
-  const registerForNotifications = async () => {
-    try {
-      // Verificar se já temos token salvo
-      const storedToken = await notificationService.getStoredToken();
-      
-      if (!storedToken) {
-        // Registrar para notificações push
-        const token = await notificationService.registerForPushNotificationsAsync();
-        if (token && user) {
-          // Enviar token para o servidor
-          await notificationService.sendTokenToServer(user.id, 'cuidador');
-        }
-      } else if (user) {
-        // Se já temos token, apenas enviar para o servidor
-        await notificationService.sendTokenToServer(user.id, 'cuidador');
-      }
-    } catch (error) {
-      console.error('Erro ao registrar notificações:', error);
-    }
+  const registerForNotifications = () => {
+    // Função vazia para manter compatibilidade
+    console.log('Notificações push não suportadas nesta versão');
   };
 
   const carregarDados = async () => {

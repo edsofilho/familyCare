@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { useUser } from '../context/UserContext';
 import { authAPI } from '../../services/api';
-import notificationService from '../services/notificationService';
 
 export default function Login({ navigation }) {
   const userContext = useUser();

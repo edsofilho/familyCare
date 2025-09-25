@@ -43,21 +43,18 @@ export default function Home({ navigation }) {
     }
   }, [currentFamily?.id]);
 
-  // Configurar listener para notificações
+  // Verificar alertas a cada 30 segundos
   useEffect(() => {
-    const subscription = notificationService.addNotificationResponseReceivedListener(response => {
-      const data = response.notification.request.content.data;
+    if (currentFamily && currentFamily.id) {
+      verificarAlertasTempoReal(); // Verificar imediatamente ao carregar
       
-      if (data.tipo === 'alerta') {
-        // Navegar para a tela de alertas quando o usuário toca na notificação
-        handleAlertas();
-      }
-    });
+      const interval = setInterval(() => {
+        verificarAlertasTempoReal();
+      }, 30000); // 30 segundos
 
-    return () => {
-      notificationService.removeNotificationSubscription(subscription);
-    };
-  }, []);
+      return () => clearInterval(interval);
+    }
+  }, [currentFamily?.id]);
 
   // Carregar índice salvo quando o componente monta
   useEffect(() => {
@@ -97,11 +94,6 @@ export default function Home({ navigation }) {
     }
   };
 
-  const registerForNotifications = () => {
-    // Função vazia para manter compatibilidade
-    console.log('Notificações push não suportadas nesta versão');
-  };
-
   const carregarDados = async () => {
     try {
       setLoading(true);
@@ -138,31 +130,27 @@ export default function Home({ navigation }) {
         familiaId: currentFamily.id,
         ultimaVerificacao: ultimaVerificacao
       });
+      
       if (res.data.status === 'sucesso' && res.data.alertas && res.data.alertas.length > 0) {
         setUltimaVerificacao(res.data.timestamp);
-        let notifiedIds = JSON.parse(await AsyncStorage.getItem('alertasNotificados')) || [];
-        const novosAlertas = res.data.alertas.filter(alerta => !notifiedIds.includes(alerta.id));
+        
+        // Mostrar apenas alertas não vistos
+        const novosAlertas = res.data.alertas;
         if (novosAlertas.length > 0) {
           setAlertasRecentes(novosAlertas);
-          notifiedIds = [...notifiedIds, ...novosAlertas.map(a => a.id)];
-          await AsyncStorage.setItem('alertasNotificados', JSON.stringify(notifiedIds));
           
-          // Mostrar notificações push em vez de Alert.alert
+          // Mostrar alerta para cada novo alerta
           novosAlertas.forEach(alerta => {
             const titulo = `🚨 Alerta de ${alerta.nomeIdoso}`;
             const corpo = `Tipo: ${alerta.tipo}\nData: ${new Date(alerta.dataAlerta).toLocaleString('pt-BR')}`;
             
-            // Mostrar notificação local
-            notificationService.showLocalNotification(titulo, corpo, {
-              alertaId: alerta.id,
-              idosoId: alerta.idosoId,
-              tipo: 'alerta'
-            });
+            // Mostrar alerta nativo
+            notificationService.showLocalNotification(titulo, corpo);
           });
         }
       }
     } catch (error) {
-      // Erro ao verificar alertas
+      console.error('Erro ao verificar alertas:', error);
     }
   };
 

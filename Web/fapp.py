@@ -4,6 +4,21 @@ app = Flask(__name__)
 
 feedbacks = []
 
+@app.route("/oque")
+def oque():
+    print(">>>> Entrou em OQUE")
+    return render_template("oque.html")
+
+@app.route("/colete")
+def colete():
+    print(">>>> Entrou em COLETE")
+    return render_template("colete.html")
+
+@app.route("/telas")
+def telas():
+    print(">>>> Entrou em TELAS")
+    return render_template("telas.html")
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -21,7 +36,7 @@ def index():
 
         return redirect(url_for('index'))
 
-    return render_templatepy('index.html', feedbacks=feedbacks)
+    return render_template('index.html', feedbacks=feedbacks)
 
 if __name__ == '__main__':
     app.run(debug=True)

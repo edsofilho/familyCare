@@ -4,10 +4,9 @@ body::before {
   top: 50px;
   left: 0;
   width: 100%;
-  height: 400px;
-  background: linear-gradient(to bottom, #6cb7e9 0%, #fff 100%);
-  clip-path: ellipse(75% 100% at 30% 0%);
-  z-index: -1;
+  height: 350px;
+  background: linear-gradient(to bottom, #6cb7e9 0%, #ffffff 100%);
+  clip-path: ellipse(85% 100% at 30% 0%);
 }
 
 :root {
@@ -28,6 +27,7 @@ body::before {
 }
 
 body {
+  position: relative;
   margin: 0;
   font-family: "Inter", sans-serif;
   color: var(--text);
@@ -75,11 +75,31 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
   border-radius: 8px;
   background: var(--soft);
   object-fit: cover;
+  margin-right: 0px;
 }
 
 .brand-name {
   font-weight: 600;
   font-family: "Poppins", sans-serif;
+}
+
+.btn-seta {
+  font-size: 17px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+
+.btn-seta:hover {
+  color: #6cd0e9;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
 }
 
 .hero {
@@ -115,6 +135,17 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
   overflow: hidden;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carrossel img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 12px;
 }
 
 .carrossel .item {
@@ -125,18 +156,13 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
   transition: opacity 0.5s ease-in-out;
   text-decoration: none; 
   color: inherit; 
+  display: block !important;
+  pointer-events: none;
 }
 
 .carrossel .item.active {
   opacity: 1;
-}
-
-.carrossel img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  display: block;
+  pointer-events: auto; 
 }
 
 .carrossel .overlay {
@@ -158,6 +184,19 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
   opacity: 1;
 }
 
+#feedback { 
+  font-family: 'Segoe UI', sans-serif; 
+  font-size: 16px; 
+  border-radius: 5px; 
+  overflow: hidden; 
+  width: min(1120px, 92%), !important;
+  margin: 0 auto !important;
+}
+
+#feedback th { 
+  background-color:#232628; 
+}
+
 .section {
   padding: 72px 0;
 }
@@ -168,7 +207,7 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
 
 .card {
   background: var(--panel);
-  border: 1px solid rgba(31, 42, 68, 0.08);
+  border: 1px solid #1f2a4414;
   border-radius: 16px;
   box-shadow: var(--shadow);
 }
@@ -183,7 +222,7 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
   width: 100%;
   height: auto;
   border-radius: 14px;
-  border: 1px solid rgba(31, 42, 68, 0.08);
+  border: 1px solid #1f2a4414;
   box-shadow: var(--shadow);
 }
 
@@ -204,8 +243,8 @@ h1, h2, h3, h4, h5, h6, .btn, .card-title {
 
 .site-footer {
   padding: 26px 0 40px;
-  border-top: 1px solid rgba(31, 42, 68, 0.06);
-  background: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid #1f29420f;
+  background: #ffffff99;
 }
 
 .footer-content {

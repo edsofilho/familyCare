@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FamilyCare</title>
+  <meta name="description" content="Site informativo do FamilyCare: aplicativo de ajuda no cuidado de idosos, com foco em segurança, autonomia e dignidade." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <button class="btn-seta" onclick="history.back()">
+        ← Voltar
+      </button>
+      <a href="#" class="brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo FamilyCare" class="brand-logo">
+        <span class="brand-name">FamilyCare</span>
+      </a>
+      <a class="brand"> O aplicativo</a>
+    </div>
+  </header>  
+  <section class="section">
+    <div class="container">
+      <div class="row mt-4" id="tela1">
+        <div class="col-md-4">
+          <div class="card device-card">
+            <div class="card-body">
+              <h5 class="card-title">Tela do Cuidador</h5>
+              <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 d-flex align-items-center">
+          <p>
+            Nesta tela o cuidador vê notificações, informações de medicamentos e doenças do idoso, além da lista de outros cuidadores conectados.
+          </p>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <div class="card device-card">
+            <div class="card-body">
+              <h5 class="card-title">Tela de SOS</h5>
+              <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app" class="img-fluid rounded">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8 d-flex align-items-center">
+          <p>
+            A função SOS permite ao idoso acionar ajuda rapidamente. Caso não seja cancelada em segundos, o alerta chega ao cuidador responsável.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

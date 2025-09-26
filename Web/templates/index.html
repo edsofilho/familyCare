@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FamilyCare</title>
   <meta name="description" content="Site informativo do FamilyCare: aplicativo de ajuda no cuidado de idosos, com foco em segurança, autonomia e dignidade." />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -22,114 +19,133 @@
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo FamilyCare" class="brand-logo">
         <span class="brand-name">FamilyCare</span>
       </a>
+      <a class="brand"> Início</a>
     </div>
   </header>
-
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="container hero-content">
-      <h1 class="hero-title">Aplicativo de Ajuda no Cuidado de Idosos</h1>
-      <p class="hero-subtitle">
-        Mais do que tecnologia: um compromisso com o bem-estar e a dignidade de quem cuidou de nós a vida toda.
-      </p>
-    </div>
-  </section>
-
-  <div class="container my-5 d-flex justify-content-center align-items-center">
-    <button class="btn btn-ghost me-3" onclick="prevItem()">&#10094;</button>
-    <div class="carrossel text-center" id="carrossel">
-      <a href="oque.html" class="item active">
-        <img src="{{ url_for('static', filename='./static/images/arduino.png') }}" alt="O que é">
-        <div class="overlay">O que é</div>
-      </a>
-
-      <a href="colete.html" class="item">
-        <img src="{{ url_for('static', filename='img/colete.jpg') }}" alt="O colete">
-        <div class="overlay">O colete</div>
-      </a>
-
-      <a href="telas.html" class="item">
-        <img src="{{ url_for('static', filename='img/aplicativo.jpg') }}" alt="O aplicativo">
-        <div class="overlay">O aplicativo</div>
-      </a>
-    </div>
-    
-    <button class="btn btn-ghost ms-3" onclick="nextItem()">&#10095;</button>
-    </div>
-  </div>
-
-  <section class="section">
-    <div class="container">
-      <div class="row mt-4" id="tela1">
-        <div class="col-md-4">
-          <div class="card device-card">
-            <div class="card-body">
-              <h5 class="card-title">Tela do Cuidador</h5>
-              <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app" class="img-fluid rounded">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8 d-flex align-items-center">
-          <p>
-            Nesta tela o cuidador vê notificações, informações de medicamentos e doenças do idoso, além da lista de outros cuidadores conectados.
-          </p>
-        </div>
-      </div>
-
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="card device-card">
-            <div class="card-body">
-              <h5 class="card-title">Tela de SOS</h5>
-              <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app" class="img-fluid rounded">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8 d-flex align-items-center">
-          <p>
-            A função SOS permite ao idoso acionar ajuda rapidamente. Caso não seja cancelada em segundos, o alerta chega ao cuidador responsável.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="equipe" class="section alt">
-    <div class="container grid-2">
-      <div>
-        <h2>Quem somos nós</h2>
-        <p>
-          O FamilyCare é fruto do trabalho de Ana Luisa, Arthur e Edson, como parte do TCC. Nosso objetivo é unir tecnologia e cuidado humano para oferecer segurança e autonomia a idosos.
+  <main>
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="container hero-content">
+        <h1 class="hero-title">Aplicativo de Ajuda no Cuidado de Idosos</h1>
+        <p class="hero-subtitle">
+          Mais do que tecnologia: um compromisso com o bem-estar e a dignidade de quem cuidou de nós a vida toda.
         </p>
       </div>
-      <div>
-        <div class="team-grid">
-          <figure class="team-member">
-            <img src="{{ url_for('static', filename='images/nardes.jpeg') }}" alt="Ana Luisa" />
-            <figcaption>
-              <a class="github-link" href="https://github.com/anardes" target="_blank">Ana Luisa</a>
-            </figcaption>
-          </figure>
-          <figure class="team-member">
-            <img src="{{ url_for('static', filename='images/arthur.jpeg') }}" alt="Arthur" />
-            <figcaption>
-              <a class="github-link" href="https://github.com/OThurzn" target="_blank">Arthur Thomas</a>
-            </figcaption>
-          </figure>
-          <figure class="team-member">
-            <img src="{{ url_for('static', filename='images/edson.jpeg') }}" alt="Edson" />
-            <figcaption>
-              <a class="github-link" href="https://github.com/edsofilho" target="_blank">Edson Filho</a>
-            </figcaption>
-          </figure>
-        </div>
+    </section>
+
+    <div class="container my-5 d-flex justify-content-center align-items-center">
+      <button class="btn btn-ghost me-3" onclick="prevItem()">&#10094;</button>
+      <div class="carrossel text-center" id="carrossel">
+        <a href="{{ url_for('oque') }}" class="item">
+          <img src="{{ url_for('static', filename='images/oque.jpeg') }}" alt="O que é">
+          <div class="overlay">O que é</div>
+        </a>
+
+        <a href="{{ url_for('colete') }}" class="item">
+          <img src="{{ url_for('static', filename='images/ocolete.png') }}" alt="O colete">
+          <div class="overlay">O colete</div>
+        </a>
+
+        <a href="{{ url_for('telas') }}" class="item">
+          <img src="{{ url_for('static', filename='images/oapp.png') }}" alt="O aplicativo">
+          <div class="overlay">O aplicativo</div>
+        </a>
+      </div>
+      <button class="btn btn-ghost ms-3" onclick="nextItem()">&#10095;</button>
       </div>
     </div>
-  </section>
+
+    <section class="section alt">
+      <div class="container grid-2">
+        <h2 class="resumo">Em resumo</h2>
+          O FamilyCare é um projeto de TCC que tem como objetivo auxiliar no cuidado de idosos. Ele integra um colete equipado com Arduino, capaz de detectar quedas e enviar sinais de alerta tanto para os cuidadores quanto para os serviços de emergência.
+
+          Além disso, o projeto conta com um aplicativo voltado para os cuidadores. Nele, é possível cadastrar os idosos sob seus cuidados, gerenciar informações de saúde como medicamentos, consultas e doenças, e ainda receber alertas caso o idoso solicite ajuda.
+
+          O idoso, por sua vez, possui um aplicativo simples, com apenas um botão de SOS. Esse botão aciona imediatamente os cuidadores e os canais de emergência, mas também permite cancelar o pedido caso não seja realmente necessário.
+      </div>
+    </section>
+
+    <section id="equipe" class="section alt">
+      <div class="container grid-2">
+        <div>
+          <h2>Quem somos nós</h2>
+          <p>
+            O FamilyCare é fruto do trabalho de Ana Luisa, Arthur e Edson, como parte do TCC. Nosso objetivo é unir tecnologia e cuidado humano para oferecer segurança e autonomia a idosos.
+          </p>
+        </div>
+        <div>
+          <div class="team-grid">
+            <figure class="team-member">
+              <img src="{{ url_for('static', filename='images/nardes.jpeg') }}" alt="Ana Luisa" />
+              <figcaption>
+                <a class="github-link" href="https://github.com/anardes" target="_blank">Ana Luisa</a>
+              </figcaption>
+            </figure>
+            <figure class="team-member">
+              <img src="{{ url_for('static', filename='images/arthur.jpeg') }}" alt="Arthur" />
+              <figcaption>
+                <a class="github-link" href="https://github.com/OThurzn" target="_blank">Arthur Thomas</a>
+              </figcaption>
+            </figure>
+            <figure class="team-member">
+              <img src="{{ url_for('static', filename='images/edson.jpeg') }}" alt="Edson" />
+              <figcaption>
+                <a class="github-link" href="https://github.com/edsofilho" target="_blank">Edson Filho</a>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="container"> 
+        <h2>Envie seu Feedback</h2><br>
+        <details> 
+          <summary>Deixe seu feedback</summary> 
+          <div class="col-md-6 mt-3" id="feedbacks"> 
+            <form method="POST"> 
+              <input type="text" name="nome" placeholder="Seu nome" class="form-control mb-2" required> 
+              <input type="email" name="email" placeholder="Seu e-mail" class="form-control mb-2" required> 
+              <input type="text" name="assunto" placeholder="Assunto" class="form-control mb-2"> 
+              <textarea name="mensagem" rows="4" placeholder="Escreva aqui seu feedback..." class="form-control mb-3" required></textarea> 
+              <input type="submit" value="Enviar" class="btn btn-success"> 
+              <input type="reset" value="Limpar" class="btn btn-danger ms-2"> 
+            </form> 
+          </div> 
+        </details> 
+        
+        <hr> 
+        <br><br>
+        <h4>Feedbacks Recebidos</h4> 
+        <table class="table table-bordered table-hover" id="feedback"> 
+          <thead class="table-dark"> 
+            <tr> 
+              <th>Nome</th> 
+              <th>E-mail</th> 
+              <th>Assunto</th> 
+              <th>Mensagem</th> 
+            </tr> 
+          </thead> 
+          <tbody> 
+            {% for f in feedbacks %} 
+            <tr> 
+              <td>{{ f.nome }}</td> 
+              <td>{{ f.email }}</td> 
+              <td>{{ f.assunto }}</td> 
+              <td>{{ f.mensagem }}</td> 
+            </tr> 
+            {% endfor %} 
+          </tbody> 
+        </table> 
+      </div>
+    </section>
+  </main>
+  <br><br>
 
   <footer class="site-footer">
     <div class="container footer-content">
-      <p>© <span id="year"></span> FamilyCare — Projeto acadêmico</p>
+      <p>©<span id="year"></span> FamilyCare — Projeto acadêmico</p>
       <nav class="footer-nav">
         <a href="#inicio">Início</a>
         <a href="#oque">O que é?</a>

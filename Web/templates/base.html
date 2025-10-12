@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}FamilyCare - Tecnologia que Cuida{% endblock %}</title>
+  <meta name="description" content="{% block description %}FamilyCare: Solução inovadora de IoT para cuidado de idosos. Colete inteligente com detecção de quedas, app para cuidadores e sistema de alertas em tempo real.{% endblock %}" />
+  <meta name="keywords" content="{% block keywords %}cuidado de idosos, IoT, tecnologia, saúde, monitoramento, quedas, aplicativo, investimento{% endblock %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="FamilyCare" class="brand-logo">
+        <span class="brand-name">FamilyCare</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('oque') }}">O que é</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('colete') }}">O Colete</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('telas') }}">O App</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container"> 
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+          <div class="footer-brand">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="FamilyCare" class="footer-logo">
+            <h3>FamilyCare</h3>
+            <p>Tecnologia que cuida, inovação que transforma vidas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <div class="col-lg-8">
+          <div class="footer-links-container">
+            <div class="footer-links-section">
+              <ul class="footer-links">
+                <li><a href="{{ url_for('index') }}#features">Inicio</a></li>
+                <li><a href="{{ url_for('oque') }}">O que é</a></li>
+                <li><a href="{{ url_for('colete') }}">O Colete</a></li>
+                <li><a href="{{ url_for('telas') }}">O App</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="footer-divider">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+          <p class="footer-copyright">
+            © <span id="year"></span> FamilyCare. Todos os direitos reservados.
+          </p>
+        </div> 
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

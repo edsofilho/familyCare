@@ -1,62 +1,230 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FamilyCare</title>
-  <meta name="description" content="Site informativo do FamilyCare: aplicativo de ajuda no cuidado de idosos, com foco em segurança, autonomia e dignidade." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-content">
-      <button class="btn-seta" onclick="history.back()">
-        ← Voltar
-      </button>
-      <a href="#" class="brand">
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo FamilyCare" class="brand-logo">
-        <span class="brand-name">FamilyCare</span>
-      </a>
-      <a class="brand"> O aplicativo</a>
-    </div>
-  </header>  
-  <section class="section">
+{% extends "base.html" %}
+
+{% block title %}Aplicativo FamilyCare - Interface Moderna{% endblock %}
+
+{% block description %}Conheça o aplicativo FamilyCare: interface intuitiva para cuidadores gerenciarem idosos, medicamentos, alertas e comunicação em tempo real.{% endblock %}
+
+{% block content %}
+
+  <!-- Hero Section -->
+  <section class="page-hero">
     <div class="container">
-      <div class="row mt-4" id="tela1">
-        <div class="col-md-4">
-          <div class="card device-card">
-            <div class="card-body">
-              <h5 class="card-title">Tela do Cuidador</h5>
-              <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Print do app" class="img-fluid rounded">
+      <div class="row align-items-center min-vh-100">
+        <div class="col-lg-8 mx-auto text-center">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              Aplicativo <span class="highlight">FamilyCare</span>
+            </h1>
+            <p class="hero-subtitle">
+              Interface moderna e intuitiva para cuidadores gerenciarem idosos, 
+              medicamentos, alertas e comunicação em tempo real. 
+              Desenvolvido com React Native para máxima performance.
+            </p>
+            <div class="hero-features justify-content-center">
+              <div class="feature-item">
+                <i class="fab fa-react"></i>
+                <span>React Native</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>iOS & Android</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-bell"></i>
+                <span>Push Notifications</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-8 d-flex align-items-center">
-          <p>
-            Nesta tela o cuidador vê notificações, informações de medicamentos e doenças do idoso, além da lista de outros cuidadores conectados.
-          </p>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4">
-          <div class="card device-card">
-            <div class="card-body">
-              <h5 class="card-title">Tela de SOS</h5>
-              <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Print do app" class="img-fluid rounded">
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8 d-flex align-items-center">
-          <p>
-            A função SOS permite ao idoso acionar ajuda rapidamente. Caso não seja cancelada em segundos, o alerta chega ao cuidador responsável.
-          </p>
         </div>
       </div>
     </div>
   </section>
-</body>
-</html>
+
+  <!-- App Features Section -->
+  <section class="app-features-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="section-title">Funcionalidades do App</h2>
+          <p class="section-subtitle">
+            Tudo que você precisa para cuidar com excelência
+          </p>
+        </div>
+      </div>
+      <div class="row g-4 mt-4">
+        <div class="col-lg-6 col-md-6">
+          <div class="app-feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Gestão de Idosos</h3>
+            <p>Cadastre e gerencie múltiplos idosos com informações completas de saúde, medicamentos e histórico médico.</p>
+            <ul class="feature-list">
+              <li>Perfil completo do idoso</li>
+              <li>Histórico médico</li>
+              <li>Informações de contato</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="app-feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-pills"></i>
+            </div>
+            <h3>Controle de Medicamentos</h3>
+            <p>Sistema completo para gerenciar medicação com lembretes automáticos e controle de interações.</p>
+            <ul class="feature-list">
+              <li>Lembretes automáticos</li>
+              <li>Histórico de medicação</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="app-feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <h3>Sistema de Alertas</h3>
+            <p>Notificações instantâneas para emergências, quedas e situações que requerem atenção imediata.</p>
+            <ul class="feature-list">
+              <li>Alertas de queda</li>
+              <li>Notificações push</li>
+              <li>SMS automático</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <div class="app-feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h3>Chat da Família</h3>
+            <p>Comunicação em tempo real entre todos os cuidadores e familiares para coordenação de cuidados.</p>
+            <ul class="feature-list">
+              <li>Chat em tempo real</li>
+              <li>Histórico de conversas</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen Showcase Section -->
+  <section class="screen-showcase-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="section-title">Interface do Aplicativo</h2>
+          <p class="section-subtitle">
+            Design moderno e intuitivo para máxima usabilidade
+          </p>
+        </div>
+      </div>
+      <div class="row g-4 mt-4">
+        <div class="col-lg-6">
+          <div class="screen-card">
+            <div class="screen-image">
+              <img src="{{ url_for('static', filename='images/cuidador.png') }}" alt="Tela do Cuidador" class="img-fluid">
+            </div>
+            <div class="screen-content">
+              <h3>Tela Principal do Cuidador</h3>
+              <p>Interface central onde o cuidador visualiza todos os idosos sob seus cuidados, alertas recentes e informações importantes.</p>
+              <div class="screen-features">
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Carrossel de idosos</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Alertas em tempo real</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Acesso rápido a funções</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Lista de cuidadores</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="screen-card">
+            <div class="screen-image">
+              <img src="{{ url_for('static', filename='images/sos.png') }}" alt="Tela de SOS" class="img-fluid">
+            </div>
+            <div class="screen-content">
+              <h3>Tela de Emergência (SOS)</h3>
+              <p>Interface simples e intuitiva para idosos solicitarem ajuda rapidamente em situações de emergência.</p>
+              <div class="screen-features">
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Botão SOS grande e visível</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Cancelamento automático</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Contagem regressiva</span>
+                </div>
+                <div class="screen-feature">
+                  <i class="fas fa-check"></i>
+                  <span>Interface simplificada</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Stack Section -->
+  <section class="tech-stack-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h2 class="section-title">Stack Tecnológico</h2>
+          <p class="section-subtitle">
+            Tecnologias modernas para máxima performance e confiabilidade
+          </p>
+        </div>
+      </div>
+      <div class="row g-4 mt-4 justify-content-center">
+        <div class="col-lg-3 col-md-6">
+          <div class="tech-stack-card">
+            <div class="tech-icon">
+              <i class="fab fa-react"></i>
+            </div>
+            <h3>React Native</h3>
+            <p>Framework multiplataforma para desenvolvimento nativo de alta performance</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="tech-stack-card">
+            <div class="tech-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h3>MySQL</h3>
+            <p>Banco de dados robusto para armazenamento seguro de informações de saúde</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="tech-stack-card">
+            <div class="tech-icon">
+              <i class="fas fa-server"></i>
+            </div>
+            <h3>PHP</h3>
+            <p>Backend confiável com APIs RESTful para comunicação em tempo real</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

@@ -6,17 +6,14 @@ feedbacks = []
 
 @app.route("/oque")
 def oque():
-    print(">>>> Entrou em OQUE")
     return render_template("oque.html")
 
 @app.route("/colete")
 def colete():
-    print(">>>> Entrou em COLETE")
     return render_template("colete.html")
 
 @app.route("/telas")
 def telas():
-    print(">>>> Entrou em TELAS")
     return render_template("telas.html")
 
 @app.route('/', methods=['GET', 'POST'])
@@ -39,4 +36,13 @@ def index():
     return render_template('index.html', feedbacks=feedbacks)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    import sys
+    import os
+    
+    # Configuração para evitar problemas de pipe no Windows
+    if sys.platform.startswith('win'):
+        import msvcrt
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
+        msvcrt.setmode(sys.stderr.fileno(), os.O_BINARY)
+    
+    app.run(host="127.0.0.1", port=5000, debug=True)

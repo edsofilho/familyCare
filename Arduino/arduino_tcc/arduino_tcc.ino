@@ -28,10 +28,6 @@ bool possibleFall = false;
 const int BUTTON_PIN = 2;
 const int BUZZER_PIN = 3;
 
-// LED RGB (cátodo comum)
-const int LED_R_PIN = 4;
-const int LED_G_PIN = 5;
-
 // Estados do botão
 bool buttonState = HIGH;
 bool lastButtonState = HIGH;
@@ -67,12 +63,8 @@ void setup() {
   // Pinos do sistema de alerta
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(LED_R_PIN, OUTPUT);
-  pinMode(LED_G_PIN, OUTPUT);
 
   digitalWrite(BUZZER_PIN, LOW);
-  digitalWrite(LED_R_PIN, LOW);
-  digitalWrite(LED_G_PIN, LOW);
 
   Serial.println("Sistema iniciado. Pressione botão, digite 'Q' ou provoque queda.");
 }
@@ -147,7 +139,7 @@ void loop() {
     }
   }
 
-  // --- Controle do buzzer/LED durante alertas ---
+  // --- Controle do buzzer durante alertas ---
   gerenciarAlertas();
 
   delay(10);
@@ -186,26 +178,5 @@ void gerenciarAlertas() {
     }
   } else {
     noTone(BUZZER_PIN);
-  }
-
-  updateRGBLed();
-}
-
-void updateRGBLed() {
-  if (alertState == NONE) {
-    if (alertEnded) {
-      digitalWrite(LED_R_PIN, HIGH);  // Vermelho fixo
-      digitalWrite(LED_G_PIN, LOW);
-    } else {
-      digitalWrite(LED_R_PIN, LOW);
-      digitalWrite(LED_G_PIN, HIGH);  // Verde fixo
-    }
-  } else {
-    if ((millis() / 300) % 2 == 0) {
-      digitalWrite(LED_R_PIN, HIGH);  // Pisca vermelho
-    } else {
-      digitalWrite(LED_R_PIN, LOW);
-    }
-    digitalWrite(LED_G_PIN, LOW);
   }
 }

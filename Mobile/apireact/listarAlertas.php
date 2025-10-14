@@ -31,13 +31,11 @@ try {
     if ($idosoId) {
         // Filtrar por idoso específico
         $stmt = $conn->prepare("
-            SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
-                   (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
-                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao
+            SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND i.id = ? AND a.visualizado = FALSE
+            WHERE fi.familiaId = ? AND i.id = ? AND (a.status = 'ativo' OR a.status = 'respondido' OR a.status = 'resolvido')
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");
@@ -45,13 +43,11 @@ try {
     } else {
         // Buscar todos os alertas da família
         $stmt = $conn->prepare("
-            SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
-                   (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
-                   (SELECT ar.acao FROM alertas_respostas ar WHERE ar.alertaId = a.id ORDER BY ar.dataResposta DESC LIMIT 1) as ultimaAcao
+            SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND a.visualizado = FALSE
+            WHERE fi.familiaId = ? AND (a.status = 'ativo' OR a.status = 'respondido' OR a.status = 'resolvido')
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");

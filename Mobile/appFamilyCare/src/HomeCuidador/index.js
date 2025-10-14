@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert, Linking, Platform, StatusBar, Modal, TextInput } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import Carousel from "react-native-reanimated-carousel";
 import { useUser } from '../context/UserContext';
@@ -25,6 +26,9 @@ export default function Home({ navigation }) {
   const [editFamilyNameModal, setEditFamilyNameModal] = useState(false);
   const [newFamilyName, setNewFamilyName] = useState(currentFamily?.nome || "");
   const [notifiedAlertIds, setNotifiedAlertIds] = useState([]);
+  const [alertModalVisible, setAlertModalVisible] = useState(false);
+  const [currentAlert, setCurrentAlert] = useState(null);
+  const [pendingAlertsQueue, setPendingAlertsQueue] = useState([]);
 
   useEffect(() => {
     if (currentFamily && currentFamily.id) {
@@ -55,6 +59,26 @@ export default function Home({ navigation }) {
       return () => clearInterval(interval);
     }
   }, [currentFamily?.id]);
+
+  // Verificar assim que a tela ganha foco
+  useFocusEffect(
+    React.useCallback(() => {
+      if (currentFamily && currentFamily.id) {
+        verificarAlertasTempoReal();
+      }
+    }, [currentFamily?.id])
+  );
+
+  // Também reagir a notificações recebidas (fallback para abrir modal)
+  useEffect(() => {
+    const sub = notificationService.addNotificationReceivedListener?.((notif) => {
+      // Forçar uma verificação rápida assim que a notificação chegar
+      verificarAlertasTempoReal();
+    });
+    return () => {
+      try { sub?.remove?.(); } catch (_) {}
+    };
+  }, []);
 
   // Carregar índice salvo quando o componente monta
   useEffect(() => {
@@ -139,19 +163,138 @@ export default function Home({ navigation }) {
         if (novosAlertas.length > 0) {
           setAlertasRecentes(novosAlertas);
           
-          // Mostrar alerta para cada novo alerta
-          novosAlertas.forEach(alerta => {
-            const titulo = `🚨 Alerta de ${alerta.nomeIdoso}`;
-            const corpo = `Tipo: ${alerta.tipo}\nData: ${new Date(alerta.dataAlerta).toLocaleString('pt-BR')}`;
-            
-            // Mostrar alerta nativo
-            notificationService.showLocalNotification(titulo, corpo);
-          });
+          // Removido alerta nativo: usaremos somente o modal
+
+          // Abrir modal imediatamente para o primeiro alerta e enfileirar os demais
+          if (!alertModalVisible && !currentAlert) {
+            console.log('Abrindo modal de alerta para', novosAlertas[0]?.id);
+            setCurrentAlert(novosAlertas[0]);
+            setAlertModalVisible(true);
+            if (novosAlertas.length > 1) {
+              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+            }
+          } else {
+            console.log('Enfileirando alertas para modal:', novosAlertas.map(a => a.id));
+            setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
+          }
+        }
+      } else {
+        // Fallback: tentar buscar via listarAlertas.php
+        try {
+          const resList = await api.post('/listarAlertas.php', { familiaId: currentFamily.id });
+          if (resList.data.status === 'sucesso' && Array.isArray(resList.data.alertas) && resList.data.alertas.length > 0) {
+            const novosAlertas = resList.data.alertas;
+            setAlertasRecentes(novosAlertas);
+            if (!alertModalVisible && !currentAlert) {
+              setCurrentAlert(novosAlertas[0]);
+              setAlertModalVisible(true);
+              if (novosAlertas.length > 1) {
+                setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+              }
+            } else {
+              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
+            }
+          }
+        } catch (e) {
+          // ignorar
         }
       }
     } catch (error) {
       console.error('Erro ao verificar alertas:', error);
+      // Fallback também no caso de erro
+      try {
+        const resList = await api.post('/listarAlertas.php', { familiaId: currentFamily.id });
+        if (resList.data.status === 'sucesso' && Array.isArray(resList.data.alertas) && resList.data.alertas.length > 0) {
+          const novosAlertas = resList.data.alertas;
+          setAlertasRecentes(novosAlertas);
+          if (!alertModalVisible && !currentAlert) {
+            setCurrentAlert(novosAlertas[0]);
+            setAlertModalVisible(true);
+            if (novosAlertas.length > 1) {
+              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+            }
+          } else {
+            setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
+          }
+        }
+      } catch (_) {}
     }
+  };
+
+  const enqueueAlertsForModal = (novosAlertas) => {
+    if (!novosAlertas || novosAlertas.length === 0) return;
+    setPendingAlertsQueue((prev) => {
+      const merged = [...prev, ...novosAlertas];
+      // Se não houver modal aberto e nenhum alerta atual, abrir o primeiro
+      if (!alertModalVisible && !currentAlert && merged.length > 0) {
+        setCurrentAlert(merged[0]);
+        setAlertModalVisible(true);
+        return merged.slice(1);
+      }
+      return merged;
+    });
+  };
+
+  const handleCloseAlertModal = async () => {
+    const alertToAcknowledge = currentAlert;
+    setAlertModalVisible(false);
+    setCurrentAlert(null);
+
+    // Registrar resposta "visualizado" no backend e marcar como visualizado
+    if (alertToAcknowledge && user && user.id) {
+      try {
+        await api.post('/responderAlerta.php', {
+          alertaId: alertToAcknowledge.id,
+          cuidadorId: user.id,
+          acao: 'respondido',
+          observacao: null,
+        });
+      } catch (e) {
+        // silencioso para não bloquear UX
+      }
+      // Removido: Não marcar visualizado automaticamente aqui
+    }
+
+    // Abrir próximo alerta da fila, se houver
+    setPendingAlertsQueue((prev) => {
+      if (prev.length > 0) {
+        const [next, ...rest] = prev;
+        setCurrentAlert(next);
+        setAlertModalVisible(true);
+        return rest;
+      }
+      return prev;
+    });
+  };
+
+  const handleAttendAlert = async () => {
+    const alertToHandle = currentAlert;
+    // Registrar que o cuidador está atendendo
+    if (alertToHandle && user && user.id) {
+      try {
+        await api.post('/responderAlerta.php', {
+          alertaId: alertToHandle.id,
+          cuidadorId: user.id,
+          acao: 'resolvido',
+          observacao: null,
+        });
+      } catch (_) {}
+    }
+    // Fechar modal e fila atual
+    setAlertModalVisible(false);
+    setCurrentAlert(null);
+    setPendingAlertsQueue((prev) => prev); // mantém fila para depois
+    // Navegar para a tela de Alertas focando o idoso do alerta, se disponível
+    try {
+      let idosoSelecionado = null;
+      if (alertToHandle && alertToHandle.idosoId && Array.isArray(idosos) && idosos.length > 0) {
+        idosoSelecionado = idosos.find(i => i.id === alertToHandle.idosoId) || null;
+      }
+      navigation.replace('Alertas', {
+        idoso: idosoSelecionado,
+        userType: 'cuidador'
+      });
+    } catch (_) {}
   };
 
   const handleLogout = () => {
@@ -488,6 +631,47 @@ export default function Home({ navigation }) {
             <TouchableOpacity style={styles.modalButton} onPress={salvarContato}>
               <Text style={styles.modalButtonText}>Salvar</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal informativo de alerta */}
+      <Modal
+        visible={alertModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleCloseAlertModal}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.alertModalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Alerta Recebido</Text>
+              <TouchableOpacity onPress={handleCloseAlertModal}>
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+
+            {currentAlert ? (
+              <View>
+                <Text style={styles.alertTitle}>🚨 {currentAlert.nomeIdoso}</Text>
+                <Text style={styles.alertLine}><Text style={styles.alertLabel}>Tipo: </Text>{currentAlert.tipo}</Text>
+                <Text style={styles.alertLine}><Text style={styles.alertLabel}>Data: </Text>{new Date(currentAlert.dataAlerta).toLocaleString('pt-BR')}</Text>
+                {currentAlert.descricao ? (
+                  <Text style={styles.alertLine}><Text style={styles.alertLabel}>Descrição: </Text>{currentAlert.descricao}</Text>
+                ) : null}
+              </View>
+            ) : (
+              <Text style={styles.loadingText}>Carregando...</Text>
+            )}
+
+            <View style={styles.modalButtonsRow}>
+              <TouchableOpacity style={styles.modalSecondaryButton} onPress={handleCloseAlertModal}>
+                <Text style={styles.modalSecondaryButtonText}>Fechar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalPrimaryButton} onPress={handleAttendAlert}>
+                <Text style={styles.modalButtonText}>Atender alerta</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -847,10 +1031,60 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
   },
+  modalButtonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  modalPrimaryButton: {
+    backgroundColor: '#2E86C1',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    flex: 1,
+    marginLeft: 8,
+  },
+  modalSecondaryButton: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
+  },
+  modalSecondaryButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
   modalButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  alertModalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 16,
+    width: '85%',
+    maxWidth: 420,
+  },
+  alertTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#D35400',
+    marginBottom: 8,
+  },
+  alertLine: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
+  },
+  alertLabel: {
+    fontWeight: 'bold',
+    color: '#2E86C1',
   },
   cadastrarCuidadorButton: {
     backgroundColor: '#2E86C1',

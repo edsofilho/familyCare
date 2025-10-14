@@ -16,7 +16,7 @@ namespace FamilyCareSerial
             try
             {
                 // ⚙️ Configura a porta serial (ajuste a COM conforme seu Arduino)
-                porta = new SerialPort("COM3", 9600)
+                porta = new SerialPort("COM6", 9600)
                 {
                     NewLine = "\n",
                     ReadTimeout = 2000

@@ -15,8 +15,8 @@ include_once('conexao.php');
 
 $postjson = json_decode(file_get_contents('php://input'), true);
 
-$familiaId = isset($postjson['familiaId']) ? intval($postjson['familiaId']) : null;
-$ultimaVerificacao = isset($postjson['ultimaVerificacao']) ? $postjson['ultimaVerificacao'] : null;
+$familiaId = isset($postjson['familiaId']) ? intval($postjson['familiaId']) : (isset($_GET['familiaId']) ? intval($_GET['familiaId']) : null);
+$ultimaVerificacao = isset($postjson['ultimaVerificacao']) ? $postjson['ultimaVerificacao'] : (isset($_GET['ultimaVerificacao']) ? $_GET['ultimaVerificacao'] : null);
 
 if (!$familiaId) {
     echo json_encode(['status' => 'erro', 'mensagem' => 'ID da família não fornecido']);
@@ -24,13 +24,13 @@ if (!$familiaId) {
 }
 
 try {
-    // Buscar alertas novos da família (últimos 5 minutos por padrão)
+    // Buscar alertas da família (sem filtrar por visualizado para garantir exibição)
     $sql = "
         SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone, i.telefone as telefoneIdoso
         FROM alertas a
         INNER JOIN idosos i ON a.idosoId = i.id
-        INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-        WHERE fi.familiaId = ? AND a.visualizado = FALSE
+        INNERJOIN familias_idosos fi ON i.id = fi.idosoId
+        WHERE fi.familiaId = ?
     ";
     
     if ($ultimaVerificacao) {

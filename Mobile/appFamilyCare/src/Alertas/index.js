@@ -46,14 +46,6 @@ export default function Alertas({ navigation, route }) {
       
       if (res.data.status === 'sucesso' && res.data.alertas) {
         setAlertas(res.data.alertas);
-        
-        // Marcar todos os alertas da família como visualizados
-        try {
-          await api.post('/marcarAlertaVisualizado.php', { familiaId: currentFamily.id });
-          console.log('Alertas marcados como visualizados');
-        } catch (markError) {
-          console.error('Erro ao marcar alertas como visualizados:', markError);
-        }
       } else {
         console.log('Nenhum alerta encontrado ou erro na resposta');
         setAlertas([]);
@@ -68,13 +60,6 @@ export default function Alertas({ navigation, route }) {
         const res = await api.post('/getAlertasTempoReal.php', { familiaId: currentFamily.id });
         if (res.data.status === 'sucesso' && res.data.alertas) {
           setAlertas(res.data.alertas);
-          
-          // Marcar como visualizados também na busca alternativa
-          try {
-            await api.post('/marcarAlertaVisualizado.php', { familiaId: currentFamily.id });
-          } catch (markError) {
-            console.error('Erro ao marcar alertas como visualizados:', markError);
-          }
         } else {
           setAlertas([]);
         }

@@ -1,14 +1,11 @@
 <?php
-// Headers CORS para permitir requisições do app
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Responder a requisições OPTIONS (preflight)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
+    exit(0);
 }
 
 include_once('conexao.php');
@@ -16,11 +13,8 @@ include_once('conexao.php');
 $postjson = json_decode(file_get_contents('php://input'), true);
 $familiaId = isset($postjson['familiaId']) ? intval($postjson['familiaId']) : null;
 $idosoId = isset($postjson['idosoId']) ? intval($postjson['idosoId']) : null;
+$incluirVisualizados = isset($postjson['incluirVisualizados']) ? $postjson['incluirVisualizados'] : false;
 
-// Log para debug
-error_log("listarAlertas.php - familiaId: " . $familiaId . ", idosoId: " . $idosoId);
-
-// Validar parâmetros
 if (!$familiaId) {
     echo json_encode(['status' => 'erro', 'mensagem' => 'ID da família não fornecido']);
     exit;
@@ -30,6 +24,13 @@ try {
     // Buscar alertas dos idosos da família
     if ($idosoId) {
         // Filtrar por idoso específico
+        $whereClause = "fi.familiaId = ? AND i.id = ?";
+        $params = [$familiaId, $idosoId];
+        
+        if (!$incluirVisualizados) {
+            $whereClause .= " AND a.visualizado = FALSE";
+        }
+        
         $stmt = $conn->prepare("
             SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
                    (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
@@ -37,13 +38,20 @@ try {
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND i.id = ? AND a.visualizado = FALSE
+            WHERE {$whereClause}
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");
-        $stmt->bind_param("ii", $familiaId, $idosoId);
+        $stmt->bind_param("ii", ...$params);
     } else {
         // Buscar todos os alertas da família
+        $whereClause = "fi.familiaId = ?";
+        $params = [$familiaId];
+        
+        if (!$incluirVisualizados) {
+            $whereClause .= " AND a.visualizado = FALSE";
+        }
+        
         $stmt = $conn->prepare("
             SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone,
                    (SELECT COUNT(*) FROM alertas_respostas ar WHERE ar.alertaId = a.id) as totalRespostas,
@@ -51,25 +59,23 @@ try {
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND a.visualizado = FALSE
+            WHERE {$whereClause}
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");
-        $stmt->bind_param("i", $familiaId);
+        $stmt->bind_param("i", ...$params);
     }
     $stmt->execute();
     $result = $stmt->get_result();
     $alertas = $result->fetch_all(MYSQLI_ASSOC);
     
-    error_log("listarAlertas.php - Alertas encontrados: " . count($alertas));
-    
     echo json_encode([
         'status' => 'sucesso',
-        'alertas' => $alertas
+        'alertas' => $alertas,
+        'incluirVisualizados' => $incluirVisualizados
     ]);
     
 } catch (Exception $e) {
-    error_log("listarAlertas.php - Erro: " . $e->getMessage());
-    echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao buscar alertas']);
+    echo json_encode(['status' => 'erro', 'mensagem' => 'Erro ao buscar alertas: ' . $e->getMessage()]);
 }
 ?>

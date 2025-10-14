@@ -31,8 +31,18 @@ try {
     }
     
     $id_idoso = $data['id_idoso'] ?? null;
-    $tipo_alerta = $data['tipo_alerta'] ?? 'SOS';
+    $tipo_alerta = $data['tipo_alerta'] ?? 'manual';
     $descricao = $data['descricao'] ?? 'Alerta de emergência';
+    
+    // Mapear tipo de alerta para valores válidos do ENUM
+    $tipo_enum = 'manual'; // Padrão
+    if (strtolower($tipo_alerta) === 'sos' || strtolower($tipo_alerta) === 'emergencia') {
+        $tipo_enum = 'manual';
+    } elseif (strtolower($tipo_alerta) === 'automatico') {
+        $tipo_enum = 'automatico';
+    } elseif (strtolower($tipo_alerta) === 'virtual') {
+        $tipo_enum = 'virtual';
+    }
     
     if (!$id_idoso) {
         error_log("ERRO: ID do idoso não fornecido");
@@ -55,7 +65,7 @@ try {
     // Inserir alerta
     $stmt = $conn->prepare("INSERT INTO alertas (idosoId, tipo, dataAlerta, status) 
                            VALUES (?, ?, NOW(), 'ativo')");
-    $stmt->bind_param("is", $id_idoso, $tipo_alerta);
+    $stmt->bind_param("is", $id_idoso, $tipo_enum);
     
     if ($stmt->execute()) {
         $alerta_id = $conn->insert_id;

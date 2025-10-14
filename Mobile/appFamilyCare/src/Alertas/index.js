@@ -38,15 +38,51 @@ export default function Alertas({ navigation, route }) {
       if (idosoSelecionado && idosoSelecionado.id) {
         requestData.idosoId = idosoSelecionado.id;
       }
+      
+      console.log('Enviando requisição para listar alertas:', requestData);
+      
       const res = await api.post('/listarAlertas.php', requestData);
+      console.log('Resposta da API:', res.data);
+      
       if (res.data.status === 'sucesso' && res.data.alertas) {
         setAlertas(res.data.alertas);
+        
+        // Marcar todos os alertas da família como visualizados
+        try {
+          await api.post('/marcarAlertaVisualizado.php', { familiaId: currentFamily.id });
+          console.log('Alertas marcados como visualizados');
+        } catch (markError) {
+          console.error('Erro ao marcar alertas como visualizados:', markError);
+        }
       } else {
+        console.log('Nenhum alerta encontrado ou erro na resposta');
         setAlertas([]);
       }
     } catch (error) {
-      Alert.alert('Erro', 'Erro ao conectar com o servidor. Verifique sua conexão.');
-      setAlertas([]);
+      console.error('Erro ao buscar alertas:', error);
+      console.error('Detalhes do erro:', error.response?.data);
+      
+      // Tentar buscar alertas de forma alternativa
+      try {
+        console.log('Tentando busca alternativa...');
+        const res = await api.post('/getAlertasTempoReal.php', { familiaId: currentFamily.id });
+        if (res.data.status === 'sucesso' && res.data.alertas) {
+          setAlertas(res.data.alertas);
+          
+          // Marcar como visualizados também na busca alternativa
+          try {
+            await api.post('/marcarAlertaVisualizado.php', { familiaId: currentFamily.id });
+          } catch (markError) {
+            console.error('Erro ao marcar alertas como visualizados:', markError);
+          }
+        } else {
+          setAlertas([]);
+        }
+      } catch (altError) {
+        console.error('Erro na busca alternativa:', altError);
+        Alert.alert('Erro', 'Erro ao conectar com o servidor. Verifique sua conexão.');
+        setAlertas([]);
+      }
     } finally {
       setLoading(false);
     }

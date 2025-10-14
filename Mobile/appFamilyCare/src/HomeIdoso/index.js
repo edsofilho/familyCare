@@ -137,24 +137,37 @@ const HomeIdoso = ({ navigation }) => {
         Alert.alert('Erro', 'Dados do idoso não disponíveis');
         return;
       }
+      
+      console.log('Enviando alerta para idoso:', user.id);
+      
       const alertData = {
         id_idoso: user.id,
         tipo_alerta: 'SOS',
         descricao: 'Alerta de emergência enviado pelo idoso'
       };
+      
+      console.log('Dados do alerta:', alertData);
+      
       const response = await api.post('/addAlerta.php', alertData);
+      console.log('Resposta do servidor:', response.data);
+      
       if (response.data.success) {
+        console.log('Alerta enviado com sucesso');
         navigation.navigate('AlertaEnviado', { 
           idoso: user, 
           userType: 'idoso' 
         });
       } else {
+        console.error('Erro na resposta do servidor:', response.data.message);
         Alert.alert('Erro', response.data.message || 'Erro ao enviar alerta');
       }
     } catch (error) {
+      console.error('Erro ao enviar alerta:', error);
+      console.error('Detalhes do erro:', error.response?.data);
+      
       Alert.alert(
         'Erro',
-        'Erro ao enviar alerta. Verifique sua conexão e tente novamente.'
+        'Erro ao enviar alerta. Verifique sua conexão e tente novamente.\n\nDetalhes: ' + (error.message || 'Erro desconhecido')
       );
     }
   };

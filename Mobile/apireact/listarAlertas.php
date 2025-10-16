@@ -35,7 +35,7 @@ try {
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND i.id = ? AND (a.status = 'ativo' OR a.status = 'respondido' OR a.status = 'resolvido')
+            WHERE fi.familiaId = ? AND i.id = ? AND (a.status = 'ativo' OR a.status = 'respondido')
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");
@@ -47,7 +47,7 @@ try {
             FROM alertas a
             INNER JOIN idosos i ON a.idosoId = i.id
             INNER JOIN familias_idosos fi ON i.id = fi.idosoId
-            WHERE fi.familiaId = ? AND (a.status = 'ativo' OR a.status = 'respondido' OR a.status = 'resolvido')
+            WHERE fi.familiaId = ? AND (a.status = 'ativo' OR a.status = 'respondido')
             ORDER BY a.dataAlerta DESC
             LIMIT 50
         ");

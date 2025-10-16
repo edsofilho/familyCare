@@ -24,13 +24,13 @@ if (!$familiaId) {
 }
 
 try {
-    // Buscar alertas da família (sem filtrar por visualizado para garantir exibição)
+    // Buscar alertas da família (apenas alertas ativos para o modal)
     $sql = "
         SELECT a.*, i.nome as nomeIdoso, i.contatoEmergenciaNome, i.contatoEmergenciaTelefone, i.telefone as telefoneIdoso
         FROM alertas a
         INNER JOIN idosos i ON a.idosoId = i.id
-        INNERJOIN familias_idosos fi ON i.id = fi.idosoId
-        WHERE fi.familiaId = ?
+        INNER JOIN familias_idosos fi ON i.id = fi.idosoId
+        WHERE fi.familiaId = ? AND a.status = 'ativo'
     ";
     
     if ($ultimaVerificacao) {

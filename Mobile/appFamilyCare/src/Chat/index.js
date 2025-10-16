@@ -17,13 +17,20 @@ import { Ionicons } from '@expo/vector-icons';
 const EMOJIS_POSSIVEIS = ["👴", "👵", "👨‍⚕️", "👩‍⚕️", "👨‍👩‍👧‍👦", "💊", "🏥", "❤️", "🤗", "👋"];
 const EMOJI_PADRAO = "👤";
 
-export default function Chat({ navigation }) {
+export default function Chat({ navigation, route }) {
   const { user, currentFamily } = useUser();
   const [mensagem, setMensagem] = useState("");
   const [mensagens, setMensagens] = useState([]);
   const [userEmojis, setUserEmojis] = useState({});
   const [carregando, setCarregando] = useState(false);
   const flatListRef = useRef();
+
+  // Verificar se há mensagem pré-escrita
+  useEffect(() => {
+    if (route?.params?.mensagemPreEscrita) {
+      setMensagem(route.params.mensagemPreEscrita);
+    }
+  }, [route?.params?.mensagemPreEscrita]);
 
   useEffect(() => {
     if (user && currentFamily) {

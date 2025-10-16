@@ -18,7 +18,7 @@ export default function Alertas({ navigation, route }) {
   const [alertas, setAlertas] = useState([]);
   const [loading, setLoading] = useState(true);
   const userType = route?.params?.userType || 'cuidador';
-  const { currentFamily } = useUser();
+  const { currentFamily, user } = useUser();
 
   useEffect(() => {
     listarAlertas();
@@ -96,10 +96,32 @@ export default function Alertas({ navigation, route }) {
         return '#D35400';
       case 'respondido':
         return '#27AE60';
-      case 'finalizado':
+      case 'resolvido':
         return '#7F8C8D';
       default:
         return '#2E86C1';
+    }
+  };
+
+  const marcarComoResolvido = async (alertaId) => {
+    try {
+      const res = await api.post('/responderAlerta.php', {
+        alertaId: alertaId,
+        cuidadorId: user?.id,
+        acao: 'resolvido',
+        observacao: 'Marcado como resolvido pelo cuidador'
+      });
+      
+      if (res.data.status === 'sucesso') {
+        Alert.alert('Sucesso', 'Alerta marcado como resolvido');
+        // Recarregar a lista de alertas
+        listarAlertas();
+      } else {
+        Alert.alert('Erro', 'Erro ao marcar alerta como resolvido');
+      }
+    } catch (error) {
+      console.error('Erro ao marcar como resolvido:', error);
+      Alert.alert('Erro', 'Erro ao conectar com o servidor');
     }
   };
 
@@ -159,6 +181,17 @@ export default function Alertas({ navigation, route }) {
                   </Text>
                 )}
               </View>
+              
+              {/* Botão para marcar como resolvido - apenas para alertas ativos e respondidos */}
+              {(alerta.status === 'ativo' || alerta.status === 'respondido') && (
+                <TouchableOpacity 
+                  style={styles.resolverButton} 
+                  onPress={() => marcarComoResolvido(alerta.id)}
+                >
+                  <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                  <Text style={styles.resolverButtonText}>Marcar como Resolvido</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ))
         ) : (
@@ -311,5 +344,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#27AE60',
     fontWeight: '600',
+  },
+  resolverButton: {
+    backgroundColor: '#27AE60',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  resolverButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 6,
   },
 });

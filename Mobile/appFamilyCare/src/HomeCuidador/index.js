@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert, Linking, Platform, StatusBar, Modal, TextInput } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
@@ -29,21 +29,22 @@ export default function Home({ navigation }) {
   const [alertModalVisible, setAlertModalVisible] = useState(false);
   const [currentAlert, setCurrentAlert] = useState(null);
   const [pendingAlertsQueue, setPendingAlertsQueue] = useState([]);
+  const [modalClosedByUser, setModalClosedByUser] = useState(false);
 
+  // Resetar controle do modal quando voltar para home
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setModalClosedByUser(false); // Resetar quando voltar para home
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  // Carregar dados quando a família mudar
   useEffect(() => {
     if (currentFamily && currentFamily.id) {
+      console.log('Família carregada, iniciando carregamento de dados...');
       carregarDados();
-    }
-  }, [currentFamily?.id]);
-
-  // Verificar alertas a cada 30 segundos
-  useEffect(() => {
-    if (currentFamily && currentFamily.id) {
-      const interval = setInterval(() => {
-        verificarAlertasTempoReal();
-      }, 30000); // 30 segundos
-
-      return () => clearInterval(interval);
     }
   }, [currentFamily?.id]);
 
@@ -120,30 +121,53 @@ export default function Home({ navigation }) {
 
   const carregarDados = async () => {
     try {
+      console.log('Iniciando carregamento de dados...');
       setLoading(true);
       
-      // Carregar idosos
-      const resIdosos = await api.post('/getIdosos.php', { familiaId: currentFamily.id });
+      if (!currentFamily || !currentFamily.id) {
+        console.log('Família não encontrada');
+        setLoading(false);
+        return;
+      }
+      
+      // Carregar idosos com timeout
+      console.log('Carregando idosos...');
+      const resIdosos = await Promise.race([
+        api.post('/getIdosos.php', { familiaId: currentFamily.id }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+      ]);
+      console.log('Resposta idosos:', resIdosos.data);
+      
       if (resIdosos.data.status === 'sucesso' || resIdosos.data.success) {
-        setIdosos(resIdosos.data.idosos);
+        setIdosos(resIdosos.data.idosos || []);
         // Carregar índice salvo após carregar os idosos
         setTimeout(() => carregarIndiceSalvo(), 100);
       } else {
         setIdosos([]);
       }
       
-      // Carregar cuidadores
-      const resCuidadores = await api.post('/getCuidadores.php', { familiaId: currentFamily.id });
+      // Carregar cuidadores com timeout
+      console.log('Carregando cuidadores...');
+      const resCuidadores = await Promise.race([
+        api.post('/getCuidadores.php', { familiaId: currentFamily.id }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+      ]);
+      console.log('Resposta cuidadores:', resCuidadores.data);
+      
       if (resCuidadores.data.status === 'sucesso' || resCuidadores.data.success) {
-        setCuidadores(resCuidadores.data.cuidadores);
+        setCuidadores(resCuidadores.data.cuidadores || []);
       } else {
         setCuidadores([]);
       }
 
     } catch (error) {
-      // Erro ao carregar dados
-      Alert.alert('Erro', 'Erro ao carregar dados');
+      console.error('Erro ao carregar dados:', error);
+      // Em caso de erro, definir arrays vazios para não travar o loading
+      setIdosos([]);
+      setCuidadores([]);
+      Alert.alert('Erro', 'Erro ao carregar dados: ' + error.message);
     } finally {
+      console.log('Finalizando carregamento...');
       setLoading(false);
     }
   };
@@ -163,17 +187,15 @@ export default function Home({ navigation }) {
         if (novosAlertas.length > 0) {
           setAlertasRecentes(novosAlertas);
           
-          // Removido alerta nativo: usaremos somente o modal
-
-          // Abrir modal imediatamente para o primeiro alerta e enfileirar os demais
-          if (!alertModalVisible && !currentAlert) {
+          // Só mostrar modal se não foi fechado pelo usuário
+          if (!alertModalVisible && !currentAlert && !modalClosedByUser) {
             console.log('Abrindo modal de alerta para', novosAlertas[0]?.id);
             setCurrentAlert(novosAlertas[0]);
             setAlertModalVisible(true);
             if (novosAlertas.length > 1) {
               setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
             }
-          } else {
+          } else if (!modalClosedByUser) {
             console.log('Enfileirando alertas para modal:', novosAlertas.map(a => a.id));
             setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
           }
@@ -239,21 +261,10 @@ export default function Home({ navigation }) {
     const alertToAcknowledge = currentAlert;
     setAlertModalVisible(false);
     setCurrentAlert(null);
+    setModalClosedByUser(true); // Marcar que foi fechado pelo usuário
 
-    // Registrar resposta "visualizado" no backend e marcar como visualizado
-    if (alertToAcknowledge && user && user.id) {
-      try {
-        await api.post('/responderAlerta.php', {
-          alertaId: alertToAcknowledge.id,
-          cuidadorId: user.id,
-          acao: 'respondido',
-          observacao: null,
-        });
-      } catch (e) {
-        // silencioso para não bloquear UX
-      }
-      // Removido: Não marcar visualizado automaticamente aqui
-    }
+    // NÃO alterar o status do alerta - apenas fechar o modal
+    // O alerta permanece ativo para aparecer novamente quando voltar para home
 
     // Abrir próximo alerta da fila, se houver
     setPendingAlertsQueue((prev) => {
@@ -269,13 +280,13 @@ export default function Home({ navigation }) {
 
   const handleAttendAlert = async () => {
     const alertToHandle = currentAlert;
-    // Registrar que o cuidador está atendendo
+    // Registrar que o cuidador está atendendo - mudar status para "respondido"
     if (alertToHandle && user && user.id) {
       try {
         await api.post('/responderAlerta.php', {
           alertaId: alertToHandle.id,
           cuidadorId: user.id,
-          acao: 'resolvido',
+          acao: 'respondido',
           observacao: null,
         });
       } catch (_) {}
@@ -284,15 +295,14 @@ export default function Home({ navigation }) {
     setAlertModalVisible(false);
     setCurrentAlert(null);
     setPendingAlertsQueue((prev) => prev); // mantém fila para depois
-    // Navegar para a tela de Alertas focando o idoso do alerta, se disponível
+    
+    // Criar mensagem pré-escrita baseada no alerta
+    const mensagemPreEscrita = `Oi ${alertToHandle?.nomeIdoso || 'querido(a)'}! Atendi o seu alerta. O que aconteceu? Está tudo bem?`;
+    
+    // Navegar para a tela do Chat com mensagem pré-escrita
     try {
-      let idosoSelecionado = null;
-      if (alertToHandle && alertToHandle.idosoId && Array.isArray(idosos) && idosos.length > 0) {
-        idosoSelecionado = idosos.find(i => i.id === alertToHandle.idosoId) || null;
-      }
-      navigation.replace('Alertas', {
-        idoso: idosoSelecionado,
-        userType: 'cuidador'
+      navigation.replace('Chat', {
+        mensagemPreEscrita: mensagemPreEscrita
       });
     } catch (_) {}
   };
@@ -665,11 +675,8 @@ export default function Home({ navigation }) {
             )}
 
             <View style={styles.modalButtonsRow}>
-              <TouchableOpacity style={styles.modalSecondaryButton} onPress={handleCloseAlertModal}>
-                <Text style={styles.modalSecondaryButtonText}>Fechar</Text>
-              </TouchableOpacity>
               <TouchableOpacity style={styles.modalPrimaryButton} onPress={handleAttendAlert}>
-                <Text style={styles.modalButtonText}>Atender alerta</Text>
+                <Text style={styles.modalButtonText}>Atender Alerta</Text>
               </TouchableOpacity>
             </View>
           </View>

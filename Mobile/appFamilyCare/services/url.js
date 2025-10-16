@@ -1,2 +1,2 @@
-const url =  'http://192.168.0.10/FamilyCare/apireact/';
+const url =  'http://192.168.56.1/FamilyCare/apireact/';
 export default url;

@@ -4,7 +4,7 @@
 // ----------------------
 // CONFIGURAÇÃO DISPOSITIVO
 // ----------------------
-const char* DEVICE_ID = "DISP001";  // número de série único do dispositivo
+const char* DEVICE_ID = "DISP011";  // número de série único do dispositivo
 
 // ----------------------
 // MPU6050 - VARIÁVEIS

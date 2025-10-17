@@ -30,11 +30,13 @@ export default function Home({ navigation }) {
   const [currentAlert, setCurrentAlert] = useState(null);
   const [pendingAlertsQueue, setPendingAlertsQueue] = useState([]);
   const [modalClosedByUser, setModalClosedByUser] = useState(false);
+  const [processedAlertIds, setProcessedAlertIds] = useState([]);
 
   // Resetar controle do modal quando voltar para home
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setModalClosedByUser(false); // Resetar quando voltar para home
+      setProcessedAlertIds([]); // Limpar alertas processados
     });
 
     return unsubscribe;
@@ -182,16 +184,21 @@ export default function Home({ navigation }) {
       if (res.data.status === 'sucesso' && res.data.alertas && res.data.alertas.length > 0) {
         setUltimaVerificacao(res.data.timestamp);
         
-        // Mostrar apenas alertas não vistos
-        const novosAlertas = res.data.alertas;
+        // Filtrar apenas alertas ativos que ainda não foram processados
+        const novosAlertas = res.data.alertas.filter(alerta => 
+          alerta.status === 'ativo' && !processedAlertIds.includes(alerta.id)
+        );
+        
         if (novosAlertas.length > 0) {
           setAlertasRecentes(novosAlertas);
           
-          // Só mostrar modal se não foi fechado pelo usuário
+          // Só mostrar modal se não foi fechado pelo usuário e não há modal aberto
           if (!alertModalVisible && !currentAlert && !modalClosedByUser) {
             console.log('Abrindo modal de alerta para', novosAlertas[0]?.id);
             setCurrentAlert(novosAlertas[0]);
             setAlertModalVisible(true);
+            setProcessedAlertIds(prev => [...prev, novosAlertas[0].id]);
+            
             if (novosAlertas.length > 1) {
               setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
             }
@@ -205,16 +212,23 @@ export default function Home({ navigation }) {
         try {
           const resList = await api.post('/listarAlertas.php', { familiaId: currentFamily.id });
           if (resList.data.status === 'sucesso' && Array.isArray(resList.data.alertas) && resList.data.alertas.length > 0) {
-            const novosAlertas = resList.data.alertas;
-            setAlertasRecentes(novosAlertas);
-            if (!alertModalVisible && !currentAlert) {
-              setCurrentAlert(novosAlertas[0]);
-              setAlertModalVisible(true);
-              if (novosAlertas.length > 1) {
-                setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+            const novosAlertas = resList.data.alertas.filter(alerta => 
+              alerta.status === 'ativo' && !processedAlertIds.includes(alerta.id)
+            );
+            
+            if (novosAlertas.length > 0) {
+              setAlertasRecentes(novosAlertas);
+              if (!alertModalVisible && !currentAlert && !modalClosedByUser) {
+                setCurrentAlert(novosAlertas[0]);
+                setAlertModalVisible(true);
+                setProcessedAlertIds(prev => [...prev, novosAlertas[0].id]);
+                
+                if (novosAlertas.length > 1) {
+                  setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+                }
+              } else if (!modalClosedByUser) {
+                setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
               }
-            } else {
-              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
             }
           }
         } catch (e) {
@@ -227,16 +241,23 @@ export default function Home({ navigation }) {
       try {
         const resList = await api.post('/listarAlertas.php', { familiaId: currentFamily.id });
         if (resList.data.status === 'sucesso' && Array.isArray(resList.data.alertas) && resList.data.alertas.length > 0) {
-          const novosAlertas = resList.data.alertas;
-          setAlertasRecentes(novosAlertas);
-          if (!alertModalVisible && !currentAlert) {
-            setCurrentAlert(novosAlertas[0]);
-            setAlertModalVisible(true);
-            if (novosAlertas.length > 1) {
-              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+          const novosAlertas = resList.data.alertas.filter(alerta => 
+            alerta.status === 'ativo' && !processedAlertIds.includes(alerta.id)
+          );
+          
+          if (novosAlertas.length > 0) {
+            setAlertasRecentes(novosAlertas);
+            if (!alertModalVisible && !currentAlert && !modalClosedByUser) {
+              setCurrentAlert(novosAlertas[0]);
+              setAlertModalVisible(true);
+              setProcessedAlertIds(prev => [...prev, novosAlertas[0].id]);
+              
+              if (novosAlertas.length > 1) {
+                setPendingAlertsQueue((prev) => [...prev, ...novosAlertas.slice(1)]);
+              }
+            } else if (!modalClosedByUser) {
+              setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
             }
-          } else {
-            setPendingAlertsQueue((prev) => [...prev, ...novosAlertas]);
           }
         }
       } catch (_) {}
@@ -272,6 +293,7 @@ export default function Home({ navigation }) {
         const [next, ...rest] = prev;
         setCurrentAlert(next);
         setAlertModalVisible(true);
+        setProcessedAlertIds(prevIds => [...prevIds, next.id]);
         return rest;
       }
       return prev;
@@ -291,10 +313,22 @@ export default function Home({ navigation }) {
         });
       } catch (_) {}
     }
-    // Fechar modal e fila atual
+    
+    // Fechar modal atual
     setAlertModalVisible(false);
     setCurrentAlert(null);
-    setPendingAlertsQueue((prev) => prev); // mantém fila para depois
+    
+    // Processar próximo alerta da fila, se houver
+    setPendingAlertsQueue((prev) => {
+      if (prev.length > 0) {
+        const [next, ...rest] = prev;
+        setCurrentAlert(next);
+        setAlertModalVisible(true);
+        setProcessedAlertIds(prevIds => [...prevIds, next.id]);
+        return rest;
+      }
+      return prev;
+    });
     
     // Criar mensagem pré-escrita baseada no alerta
     const mensagemPreEscrita = `Oi ${alertToHandle?.nomeIdoso || 'querido(a)'}! Atendi o seu alerta. O que aconteceu? Está tudo bem?`;

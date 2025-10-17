@@ -125,6 +125,32 @@ export default function Alertas({ navigation, route }) {
     }
   };
 
+  const atenderAlerta = async (alerta) => {
+    try {
+      const res = await api.post('/responderAlerta.php', {
+        alertaId: alerta.id,
+        cuidadorId: user?.id,
+        acao: 'respondido',
+        observacao: null,
+      });
+      
+      if (res.data.status === 'sucesso') {
+        // Criar mensagem pré-escrita baseada no alerta
+        const mensagemPreEscrita = `Oi ${alerta?.nomeIdoso || 'querido(a)'}! Atendi o seu alerta. O que aconteceu? Está tudo bem?`;
+        
+        // Navegar para a tela do Chat com mensagem pré-escrita
+        navigation.replace('Chat', {
+          mensagemPreEscrita: mensagemPreEscrita
+        });
+      } else {
+        Alert.alert('Erro', 'Erro ao atender alerta');
+      }
+    } catch (error) {
+      console.error('Erro ao atender alerta:', error);
+      Alert.alert('Erro', 'Erro ao conectar com o servidor');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#2E86C1" barStyle="light-content" />
@@ -182,15 +208,29 @@ export default function Alertas({ navigation, route }) {
                 )}
               </View>
               
-              {/* Botão para marcar como resolvido - apenas para alertas ativos e respondidos */}
+              {/* Botões de ação - apenas para alertas ativos e respondidos */}
               {(alerta.status === 'ativo' || alerta.status === 'respondido') && (
-                <TouchableOpacity 
-                  style={styles.resolverButton} 
-                  onPress={() => marcarComoResolvido(alerta.id)}
-                >
-                  <Ionicons name="checkmark-circle" size={20} color="#fff" />
-                  <Text style={styles.resolverButtonText}>Marcar como Resolvido</Text>
-                </TouchableOpacity>
+                <View style={styles.actionButtonsContainer}>
+                  {/* Botão Atender Alerta - apenas para alertas ativos */}
+                  {alerta.status === 'ativo' && (
+                    <TouchableOpacity 
+                      style={styles.atenderButton} 
+                      onPress={() => atenderAlerta(alerta)}
+                    >
+                      <Ionicons name="chatbubble" size={20} color="#fff" />
+                      <Text style={styles.atenderButtonText}>Atender Alerta</Text>
+                    </TouchableOpacity>
+                  )}
+                  
+                  {/* Botão Marcar como Resolvido */}
+                  <TouchableOpacity 
+                    style={styles.resolverButton} 
+                    onPress={() => marcarComoResolvido(alerta.id)}
+                  >
+                    <Ionicons name="checkmark-circle" size={20} color="#fff" />
+                    <Text style={styles.resolverButtonText}>Marcar como Resolvido</Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
           ))
@@ -345,6 +385,25 @@ const styles = StyleSheet.create({
     color: '#27AE60',
     fontWeight: '600',
   },
+  actionButtonsContainer: {
+    marginTop: 12,
+    gap: 8,
+  },
+  atenderButton: {
+    backgroundColor: '#2E86C1',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  atenderButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 6,
+  },
   resolverButton: {
     backgroundColor: '#27AE60',
     flexDirection: 'row',
@@ -353,7 +412,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    marginTop: 12,
   },
   resolverButtonText: {
     color: '#fff',
